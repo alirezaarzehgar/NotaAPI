@@ -6,9 +6,9 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/Asrez/NotaAPI/api/handlers"
+	"github.com/Asrez/NotaAPI/api/routes"
 	"github.com/Asrez/NotaAPI/config"
 	"github.com/Asrez/NotaAPI/database"
-	"github.com/Asrez/NotaAPI/routes"
 	"github.com/Asrez/NotaAPI/utils"
 )
 
