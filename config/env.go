@@ -40,3 +40,7 @@ func GetDb() (*DbConf, error) {
 	}
 	return &conf, nil
 }
+
+func AlertDb() string {
+	return os.Getenv("ALERT_DATABASE")
+}
