@@ -25,7 +25,7 @@ type DbConf struct {
 	Port     uint64
 }
 
-func GetDb() (*DbConf, error) {
+func Db() (*DbConf, error) {
 	port, err := strconv.ParseUint(os.Getenv("MYSQL_PORT"), 10, 64)
 	if err != nil {
 		return nil, err
@@ -43,4 +43,16 @@ func GetDb() (*DbConf, error) {
 
 func AlertDb() string {
 	return os.Getenv("ALERT_DATABASE")
+}
+
+type AdminConfig struct {
+	Username, Email, Password string
+}
+
+func Admin() AdminConfig {
+	return AdminConfig{
+		Username: os.Getenv("ADMIN_NAME"),
+		Email:    os.Getenv("ADMIN_EMAIL"),
+		Password: os.Getenv("ADMIN_PASSWORD"),
+	}
 }

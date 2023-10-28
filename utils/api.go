@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"log"
 	"os"
@@ -23,4 +25,10 @@ func Alert(alertKey string) string {
 		}
 	}
 	return alertsDatabase[alertKey]
+}
+
+func HashPassword(pass string) string {
+	hashByte := sha256.Sum256([]byte(pass))
+	hashStr := hex.EncodeToString(hashByte[:])
+	return hashStr
 }

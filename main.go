@@ -19,7 +19,7 @@ func main() {
 	}
 	utils.InitLogger()
 
-	dbConf, err := config.GetDb()
+	dbConf, err := config.Db()
 	if err != nil {
 		log.Fatal(".env: ", err)
 	}
@@ -27,6 +27,10 @@ func main() {
 	db, err := database.Init(dbConf)
 	if err != nil {
 		log.Fatal("database: ", err)
+	}
+
+	if err := database.Migrate(db); err != nil {
+		log.Fatal("migrate: ", err)
 	}
 
 	handlers.SetDB(db)
