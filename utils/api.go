@@ -89,6 +89,11 @@ func GetUserId(c echo.Context) uint {
 	token, _, _ := new(jwt.Parser).ParseUnverified(bearer[len("Bearer "):], jwt.MapClaims{})
 	claims := token.Claims.(jwt.MapClaims)
 
+	_, ok := claims["jti"]
+	if !ok {
+		return 0
+	}
+
 	id, _ := strconv.Atoi(claims["jti"].(string))
 	return uint(id)
 

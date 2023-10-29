@@ -11,5 +11,6 @@
 	"bad_file": "Invalid file format",
 	"story_wrong": "Wrong story field:",
 	"dup_estory": "You can't create more that one explore story",
+	"guest_only": "You should be guest to access this page",
 	"internal": "Internal server error"
 }

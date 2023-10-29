@@ -33,8 +33,9 @@ func Init() *echo.Echo {
 	g.DELETE("/story/:code", todo)
 	g.POST("/story/convert", todo)
 
-	g.GET("/guest/settings", todo)
-	g.PUT("/guest/settings", todo)
+	g = g.Group("", middlewares.GuestOnly)
+	g.GET("/guest/settings", handlers.GetGuestSettings)
+	g.PUT("/guest/settings", handlers.EditGuestSettings)
 	g.DELETE("/guest/delete-account", todo)
 	g.POST("/guest/save-story", todo)
 	g.GET("/guest/stories", todo)

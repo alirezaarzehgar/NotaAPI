@@ -34,6 +34,43 @@ func CreateGuestToken(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]any{
 		"status": true,
-		"data":   map[string]any{"token": token},
+		"data":   map[string]any{"token": token.JwtToken},
+	})
+}
+
+func GetGuestSettings(c echo.Context) error {
+	var token models.Token
+	r := db.Model(&models.Token{}).
+		Where(models.Token{JwtToken: utils.GetToken(c)}).
+		First(&token)
+	if r.RowsAffected == 0 {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	}
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": true,
+		"data": map[string]any{
+			"notification": token.Notification,
+			"gcm_token":    token.GCMToken,
+		},
+	})
+}
+
+func EditGuestSettings(c echo.Context) error {
+	var token models.Token
+
+	if err := json.NewDecoder(c.Request().Body).Decode(&token); err != nil {
+		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
+	}
+
+	r := db.Model(&models.Token{}).
+		Where(models.Token{JwtToken: utils.GetToken(c)}).
+		Updates(map[string]any{"notification": token.Notification, "gcm_token": token.GCMToken})
+	if r.RowsAffected == 0 {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": true,
+		"data":   map[string]any{},
 	})
 }

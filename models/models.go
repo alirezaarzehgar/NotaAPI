@@ -22,12 +22,11 @@ type User struct {
 	Role     string `gorm:"default:user" json:"role"`
 	Blocked  bool   `gorm:"default:false" json:"blocked"`
 	Verified bool   `gorm:"default:true" json:"verified"`
-	Tokens   Token
 }
 
 type Token struct {
 	gorm.Model
-	UserID          uint      `gorm:"not null" json:"user_id"`
+	UserID          uint      `json:"user_id"`
 	JwtToken        string    `gorm:"not null" json:"token"`
 	Blocked         bool      `gorm:"default:false" json:"blocked"`
 	ScreenHeight    uint      `json:"screen_height"`
@@ -36,11 +35,14 @@ type Token struct {
 	DeviceType      string    `json:"device_type"`
 	Version         uint      `json:"version"`
 	LastRequestTime time.Time `gorm:"default:current_timestamp" json:"last_request_time"`
+
+	Notification bool   `gorm:"default:false" json:"notification"`
+	GCMToken     string `json:"gcm_token"`
 }
 
 type Story struct {
 	gorm.Model
-	UserID uint      `gorm:"not null" json:"user_id"`
+	UserID uint      `json:"user_id"`
 	Code   string    `gorm:"not null; unique" json:"code"`
 	Type   string    `gorm:"default:normal" json:"type"`
 	Name   string    `gorm:"not null" json:"name"`
@@ -67,5 +69,7 @@ type Story struct {
 
 type Guest struct {
 	gorm.Model
-	LastRequestTime time.Time `gorm:"not null" json:"last_request_time"`
+	TokenID uint  `gorm:"not null" json:"token_id"`
+	StoryID uint  `gorm:"not null" json:"story_id"`
+	Story   Story `gorm:"not null" json:"story"`
 }

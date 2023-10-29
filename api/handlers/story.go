@@ -116,7 +116,7 @@ func ChangeStoryStatus(c echo.Context) error {
 
 	r := db.Model(&models.Story{}).Where(models.Story{Code: c.Param("code")}).Update("is_public", data.IsPublic)
 	if r.RowsAffected == 0 {
-		return utils.ReturnAlert(c, http.StatusNotFound, "not_found", r.Error.Error())
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	}
 	return c.JSON(http.StatusOK, map[string]any{
 		"status": true,
