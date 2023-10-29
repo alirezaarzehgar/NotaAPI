@@ -72,3 +72,29 @@ func Login(c echo.Context) error {
 		"data":   map[string]any{"token": token},
 	})
 }
+
+func GetStoryCount(c echo.Context) error {
+	var storyNormalCount, storyExploreCount int64
+
+	err := db.Model(&models.Story{}).
+		Where(models.Story{UserID: utils.GetUserId(c), Type: models.STORY_TYPE_NORMAL}).
+		Count(&storyNormalCount).Error
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	err = db.Model(&models.Story{}).
+		Where(models.Story{UserID: utils.GetUserId(c), Type: models.STORY_TYPE_EXPLORE}).
+		Count(&storyExploreCount).Error
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": true,
+		"data": map[string]any{
+			"explore_story":      storyExploreCount > 0,
+			"normal_story_count": storyNormalCount,
+		},
+	})
+}

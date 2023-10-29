@@ -21,7 +21,7 @@ func Init() *echo.Echo {
 
 	g := e.Group("", echojwt.WithConfig(echojwt.Config{SigningKey: config.JwtSecret()}), middlewares.CheckToken)
 	g.Static("/", config.Assets())
-	g.GET("/user/story/count", todo)
+	g.GET("/user/story/count", handlers.GetStoryCount)
 	g.DELETE("/user/delete-account", todo)
 
 	g.POST("/story/upload-asset", handlers.UploadAsset)
