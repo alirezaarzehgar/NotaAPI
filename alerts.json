@@ -10,5 +10,6 @@
 	"invalid_token": "Invalid JWT token",
 	"bad_file": "Invalid file format",
 	"story_wrong": "Wrong story field:",
+	"dup_estory": "You can't create more that one explore story",
 	"internal": "Internal server error"
 }

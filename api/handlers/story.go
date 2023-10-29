@@ -70,8 +70,24 @@ func UploadAsset(c echo.Context) error {
 
 func CreateStory(c echo.Context) error {
 	var story models.Story
+
 	if err := json.NewDecoder(c.Request().Body).Decode(&story); err != nil {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request", ":", err.Error())
+	}
+
+	if story.Type == models.STORY_TYPE_EXPLORE {
+		var storyExploreCount int64
+
+		err := db.Model(&models.Story{}).
+			Where(models.Story{UserID: utils.GetUserId(c), Type: models.STORY_TYPE_EXPLORE}).
+			Count(&storyExploreCount).Error
+		if err != nil {
+			return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+		}
+
+		if storyExploreCount > 0 {
+			return utils.ReturnAlert(c, http.StatusBadRequest, "dup_estory")
+		}
 	}
 
 	if field := validations.GetWrongStoryField(story); field != "" {
