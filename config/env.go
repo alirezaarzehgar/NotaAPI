@@ -56,3 +56,7 @@ func Admin() AdminConfig {
 		Password: os.Getenv("ADMIN_PASSWORD"),
 	}
 }
+
+func Assets() string {
+	return os.Getenv("ASSETS_DIRECTORY")
+}

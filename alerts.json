@@ -8,5 +8,6 @@
 	"login_unauthorized": "Your password or email address is invalid",
 	"bad_request": "Bad request",
 	"invalid_token": "Invalid JWT token",
+	"bad_file": "Invalid file format",
 	"internal": "Internal server error"
 }

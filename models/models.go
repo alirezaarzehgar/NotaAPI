@@ -9,6 +9,9 @@ import (
 const (
 	USERS_ROLE_ADMIN = "admin"
 	USERS_ROLE_USER  = "user"
+
+	STORY_TYPE_EXPLORE = "explore"
+	STORY_TYPE_NORMAL  = "normal"
 )
 
 type User struct {
@@ -37,7 +40,29 @@ type Token struct {
 
 type Story struct {
 	gorm.Model
-	Code string `gorm:"not null; unique" json:"code"`
+	UserID uint      `gorm:"not null" json:"user_id"`
+	Code   string    `gorm:"not null; unique" json:"code"`
+	Type   string    `gorm:"default:normal" json:"type"`
+	Name   string    `gorm:"not null" json:"name"`
+	From   time.Time `json:"from"`
+	To     time.Time `json:"to"`
+
+	FinalImageUrl        string `gorm:"not null" json:"final_image"`
+	BackgroundUrl        string `gorm:"not null" json:"background_url"`
+	MainBackgroundUrl    string `json:"main_background_url"`
+	CroppedBackgroundUrl string `json:"cropped_background_url"`
+	BackgroundColor      string `gorm:"not null" json:"background_color"`
+
+	LogoUrl       string `json:"logo_url"`
+	LogoHeight    uint   `json:"logo_height"`
+	LogoWidth     uint   `json:"logo_width"`
+	LogoXLocation uint   `json:"logo_x_location"`
+	LogoYLocation uint   `json:"logo_y_location"`
+
+	AttachedWebpage string `json:"attached_webpage"`
+	AttachedFileUrl string `json:"attached_file_url"`
+
+	IsPublic bool `gorm:"default:false" json:"is_public"`
 }
 
 type Guest struct {

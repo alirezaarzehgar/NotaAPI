@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/Asrez/NotaAPI/config"
@@ -81,4 +82,14 @@ func ValidatePassword(password string) bool {
 func GetToken(c echo.Context) string {
 	bearer := c.Request().Header.Get("Authorization")
 	return bearer[len("Bearer "):]
+}
+
+func GetUserId(c echo.Context) uint {
+	bearer := c.Request().Header.Get("Authorization")
+	token, _, _ := new(jwt.Parser).ParseUnverified(bearer[len("Bearer "):], jwt.MapClaims{})
+	claims := token.Claims.(jwt.MapClaims)
+
+	id, _ := strconv.Atoi(claims["jti"].(string))
+	return uint(id)
+
 }

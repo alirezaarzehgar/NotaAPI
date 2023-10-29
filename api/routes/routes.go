@@ -20,15 +20,17 @@ func Init() *echo.Echo {
 	e.POST("/guest/create-token", handlers.CreateGuestToken)
 
 	g := e.Group("", echojwt.WithConfig(echojwt.Config{SigningKey: config.JwtSecret()}), middlewares.CheckToken)
+	g.Static("/", config.Assets())
 	g.GET("/user/story/count", todo)
 	g.DELETE("/user/delete-account", todo)
 
-	g.GET("/story/pub/:code", todo)
+	g.POST("/story/upload-asset", handlers.UploadAsset)
 	g.POST("/story/create", todo)
-	g.GET("/story/stories", todo)
-	g.DELETE("/story/:code", todo)
-	g.PUT("/story/:code", todo)
 	g.POST("/story/publish/:code", todo)
+	g.GET("/story/stories", todo)
+	g.GET("/story/pub/:code", todo)
+	g.PUT("/story/:code", todo)
+	g.DELETE("/story/:code", todo)
 	g.POST("/story/convert", todo)
 
 	g.GET("/guest/settings", todo)
