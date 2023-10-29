@@ -46,13 +46,15 @@ func GetUserDir(id uint) string {
 	return hashStr
 }
 
-func GetUniqueName(name string) string {
+func CreateRandomString(salt string, len uint) string {
 	rData := make([]byte, 10)
 	if _, err := rand.Read(rData); err != nil {
 		log.Println("rand.Read(): ", err)
 	}
+	hashByte := sha256.Sum256(append(rData, []byte(salt)...))
+	return hex.EncodeToString(hashByte[:len])
+}
 
-	hashByte := sha256.Sum256([]byte(rData))
-	hashStr := hex.EncodeToString(hashByte[:5])
-	return hashStr + "+" + name
+func GetUniqueName(name string) string {
+	return CreateRandomString(name, 5) + "+" + name
 }

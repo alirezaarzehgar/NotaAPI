@@ -25,8 +25,8 @@ func Init() *echo.Echo {
 	g.DELETE("/user/delete-account", todo)
 
 	g.POST("/story/upload-asset", handlers.UploadAsset)
-	g.POST("/story/create", todo)
-	g.POST("/story/publish/:code", todo)
+	g.POST("/story/create", handlers.CreateStory)
+	g.POST("/story/change-status/:code", handlers.ChangeStoryStatus)
 	g.GET("/story/stories", todo)
 	g.GET("/story/pub/:code", todo)
 	g.PUT("/story/:code", todo)

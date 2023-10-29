@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Asrez/NotaAPI/config"
@@ -33,11 +34,11 @@ func Alert(alertKey string) string {
 	return alertsDatabase[alertKey]
 }
 
-func ReturnAlert(c echo.Context, status int, alertKey string) error {
-	log.Println("http status:", status, "error message:", Alert(alertKey))
+func ReturnAlert(c echo.Context, status int, alertKey string, extra ...string) error {
+	log.Println("http status:", status, "error message:", Alert(alertKey), extra)
 	return c.JSON(status, map[string]any{
 		"status": false,
-		"alert":  Alert(alertKey),
+		"alert":  Alert(alertKey) + strings.Join(extra, " "),
 		"data":   map[string]any{},
 	})
 }

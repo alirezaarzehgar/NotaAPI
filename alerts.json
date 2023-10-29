@@ -9,5 +9,6 @@
 	"bad_request": "Bad request",
 	"invalid_token": "Invalid JWT token",
 	"bad_file": "Invalid file format",
+	"story_wrong": "Wrong story field:",
 	"internal": "Internal server error"
 }
