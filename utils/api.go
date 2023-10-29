@@ -35,7 +35,6 @@ func Alert(alertKey string) string {
 }
 
 func ReturnAlert(c echo.Context, status int, alertKey string, extra ...string) error {
-	log.Println("http status:", status, "error message:", Alert(alertKey), extra)
 	return c.JSON(status, map[string]any{
 		"status": false,
 		"alert":  Alert(alertKey) + strings.Join(extra, " "),

@@ -97,7 +97,7 @@ func CreateStory(c echo.Context) error {
 	story.UserID = utils.GetUserId(c)
 	story.Code = utils.CreateRandomString(fmt.Sprint(story), 5)
 	if err := db.Create(&story).Error; err != nil {
-		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal", ": create story: ", err.Error())
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 
 	return c.JSON(http.StatusOK, map[string]any{
@@ -122,4 +122,21 @@ func ChangeStoryStatus(c echo.Context) error {
 		"status": true,
 		"data":   map[string]any{"is_public": data.IsPublic},
 	})
+}
+
+func CheckStoryExistance(c echo.Context) error {
+	var count int64
+
+	err := db.Model(&models.Story{}).
+		Where(models.Story{Code: c.Param("code"), IsPublic: true}).
+		Count(&count).Error
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	if count == 0 {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"status": true})
 }

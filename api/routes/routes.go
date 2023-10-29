@@ -28,7 +28,7 @@ func Init() *echo.Echo {
 	g.POST("/story/create", handlers.CreateStory)
 	g.POST("/story/change-status/:code", handlers.ChangeStoryStatus)
 	g.GET("/story/stories", todo)
-	g.GET("/story/pub/:code", todo)
+	g.GET("/story/exists/:code", handlers.CheckStoryExistance)
 	g.PUT("/story/:code", todo)
 	g.DELETE("/story/:code", todo)
 	g.POST("/story/convert", todo)
