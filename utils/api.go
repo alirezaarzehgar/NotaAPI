@@ -60,14 +60,13 @@ func CreateUserToken(id uint, email, user string) string {
 	return bearer
 }
 
-func CreateGuestToken(id uint) string {
+func CreateGuestToken() string {
 	rData := make([]byte, 10)
 	if _, err := rand.Read(rData); err != nil {
 		log.Println("rand.Read(): ", err)
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
-		ID:        fmt.Sprint(id),
 		Subject:   string(rData),
 		ExpiresAt: EXPTIME,
 	})

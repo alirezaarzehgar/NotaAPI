@@ -38,7 +38,7 @@ func Register(c echo.Context) error {
 	}
 
 	token := utils.CreateUserToken(user.ID, user.Email, user.Username)
-	if err := db.Create(&models.Token{JwtToken: token}).Error; err != nil {
+	if err := db.Create(&models.Token{UserID: user.ID, JwtToken: token}).Error; err != nil {
 		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 
@@ -63,7 +63,7 @@ func Login(c echo.Context) error {
 	}
 
 	token := utils.CreateUserToken(user.ID, user.Email, user.Username)
-	if err := db.Create(&models.Token{JwtToken: token}).Error; err != nil {
+	if err := db.Create(&models.Token{UserID: user.ID, JwtToken: token}).Error; err != nil {
 		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 
