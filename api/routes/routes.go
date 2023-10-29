@@ -15,7 +15,7 @@ func Init() *echo.Echo {
 	e.POST("/user/register", handlers.Register)
 	e.POST("/user/login", handlers.Login)
 
-	e.POST("/token/check", todo)
+	e.POST("/token/check", handlers.CheckToken)
 	e.POST("/guest/create-token", todo)
 
 	g := e.Group("", echojwt.WithConfig(echojwt.Config{SigningKey: config.JwtSecret()}))
