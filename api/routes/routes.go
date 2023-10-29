@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/Asrez/NotaAPI/api/handlers"
+	"github.com/Asrez/NotaAPI/api/middlewares"
 	"github.com/Asrez/NotaAPI/config"
 )
 
@@ -18,7 +19,7 @@ func Init() *echo.Echo {
 	e.POST("/token/check", handlers.CheckToken)
 	e.POST("/guest/create-token", handlers.CreateGuestToken)
 
-	g := e.Group("", echojwt.WithConfig(echojwt.Config{SigningKey: config.JwtSecret()}))
+	g := e.Group("", echojwt.WithConfig(echojwt.Config{SigningKey: config.JwtSecret()}), middlewares.CheckToken)
 	g.GET("/user/story/count", todo)
 	g.DELETE("/user/delete-account", todo)
 

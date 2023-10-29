@@ -7,5 +7,6 @@
 	"insecure_password":"Insecure password",
 	"login_unauthorized": "Your password or email address is invalid",
 	"bad_request": "Bad request",
+	"invalid_token": "Invalid JWT token",
 	"internal": "Internal server error"
 }

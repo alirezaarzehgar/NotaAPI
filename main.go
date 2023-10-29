@@ -6,6 +6,7 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/Asrez/NotaAPI/api/handlers"
+	"github.com/Asrez/NotaAPI/api/middlewares"
 	"github.com/Asrez/NotaAPI/api/routes"
 	"github.com/Asrez/NotaAPI/config"
 	"github.com/Asrez/NotaAPI/database"
@@ -33,6 +34,7 @@ func main() {
 		log.Fatal("migrate: ", err)
 	}
 
+	middlewares.SetDB(db)
 	handlers.SetDB(db)
 
 	log.Println("Start application")

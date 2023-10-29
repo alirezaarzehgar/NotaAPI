@@ -77,3 +77,8 @@ func CreateGuestToken() string {
 func ValidatePassword(password string) bool {
 	return len(password) < 8
 }
+
+func GetToken(c echo.Context) string {
+	bearer := c.Request().Header.Get("Authorization")
+	return bearer[len("Bearer "):]
+}
