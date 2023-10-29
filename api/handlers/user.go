@@ -14,10 +14,10 @@ import (
 func Register(c echo.Context) error {
 	user := models.User{Role: models.USERS_ROLE_USER}
 	if err := json.NewDecoder(c.Request().Body).Decode(&user); err != nil {
-		return echo.ErrBadRequest
+		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 	}
 	if user.Email == "" || user.Password == "" {
-		return echo.ErrBadRequest
+		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 	}
 
 	if utils.ValidatePassword(user.Password) {
@@ -53,7 +53,7 @@ func Login(c echo.Context) error {
 	var user models.User
 
 	if err := json.NewDecoder(c.Request().Body).Decode(&user); err != nil {
-		return echo.ErrBadRequest
+		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 	}
 	fillteredUser := models.User{Email: user.Email, Password: utils.HashPassword(user.Password)}
 	db.Where(fillteredUser).First(&user).Count(&loggedin)
