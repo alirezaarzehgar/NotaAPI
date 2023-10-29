@@ -1,4 +1,9 @@
 {
 	"success": "Success",
-	"not_found": "Not found"
+	"not_found": "Not found",
+	"user_conflict": "Someone registered with this email",
+	"invalid_email":"Invalid email address",
+	"insecure_password":"Insecure password",
+	"login_unauthorized": "Your password or email address is invalid",
+	"internal": "Internal server error"
 }

@@ -4,6 +4,7 @@ import (
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 
+	"github.com/Asrez/NotaAPI/api/handlers"
 	"github.com/Asrez/NotaAPI/config"
 )
 
@@ -11,8 +12,8 @@ func todo(c echo.Context) error { return nil }
 
 func Init() *echo.Echo {
 	e := echo.New()
-	e.POST("/user/register", todo)
-	e.POST("/user/login", todo)
+	e.POST("/user/register", handlers.Register)
+	e.POST("/user/login", handlers.Login)
 
 	e.POST("/token/check", todo)
 	e.POST("/guest/create-token", todo)

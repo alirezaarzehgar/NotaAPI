@@ -1,13 +1,18 @@
 package utils
 
 import (
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/Asrez/NotaAPI/config"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/labstack/echo/v4"
 )
 
 var alertsDatabase map[string]string
@@ -27,8 +32,49 @@ func Alert(alertKey string) string {
 	return alertsDatabase[alertKey]
 }
 
+func ReturnAlert(c echo.Context, status int, alertKey string) error {
+	log.Println("http status:", status, "error message:", Alert(alertKey))
+	return c.JSON(status, map[string]any{
+		"status": false,
+		"alert":  Alert(alertKey),
+		"data":   map[string]any{},
+	})
+}
+
 func HashPassword(pass string) string {
 	hashByte := sha256.Sum256([]byte(pass))
 	hashStr := hex.EncodeToString(hashByte[:])
 	return hashStr
+}
+
+var EXPTIME = jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 30))
+
+func CreateUserToken(id uint, email, user string) string {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
+		ID:        fmt.Sprint(id),
+		Issuer:    email,
+		Subject:   user,
+		ExpiresAt: EXPTIME,
+	})
+	bearer, _ := token.SignedString(config.JwtSecret())
+	return bearer
+}
+
+func CreateGuestToken(id uint) string {
+	rData := make([]byte, 10)
+	if _, err := rand.Read(rData); err != nil {
+		log.Println("rand.Read(): ", err)
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
+		ID:        fmt.Sprint(id),
+		Subject:   string(rData),
+		ExpiresAt: EXPTIME,
+	})
+	bearer, _ := token.SignedString(config.JwtSecret())
+	return bearer
+}
+
+func ValidatePassword(password string) bool {
+	return len(password) < 8
 }
