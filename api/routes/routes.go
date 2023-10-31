@@ -9,8 +9,6 @@ import (
 	"github.com/Asrez/NotaAPI/config"
 )
 
-func todo(c echo.Context) error { return nil }
-
 func Init() *echo.Echo {
 	e := echo.New()
 	e.POST("/user/register", handlers.Register)
@@ -34,7 +32,7 @@ func Init() *echo.Echo {
 	u.GET("/story/stories", handlers.ListStories)
 	u.PUT("/story/:code", handlers.EditStoryInfo)
 	u.DELETE("/story/:code", handlers.DeleteStory)
-	u.POST("/story/convert", todo)
+	u.POST("/story/convert/:code", handlers.ConvertStory)
 
 	g = g.Group("", middlewares.GuestOnly)
 	g.GET("/guest/settings", handlers.GetGuestSettings)

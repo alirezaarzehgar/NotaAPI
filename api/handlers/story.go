@@ -261,3 +261,43 @@ func DeleteStory(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
+
+func ConvertStory(c echo.Context) error {
+	story := models.Story{}
+
+	err := db.First(&story, "code = ? AND is_public = ?", c.Param("code"), true).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+	if story.Type == models.STORY_TYPE_NORMAL {
+		story.From = time.Time{}
+		story.To = time.Time{}
+		story.Type = models.STORY_TYPE_EXPLORE
+	} else {
+		var data struct {
+			From time.Time `json:"from"`
+			To   time.Time `json:"to"`
+		}
+
+		if err := json.NewDecoder(c.Request().Body).Decode(&data); err != nil {
+			return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
+		}
+
+		story.From = data.From
+		story.To = data.To
+		story.Type = models.STORY_TYPE_NORMAL
+	}
+
+	if field := validations.GetWrongStoryField(story); field != "" {
+		return utils.ReturnAlert(c, http.StatusBadRequest, "story_wrong", field)
+	}
+
+	err = db.Save(&story).Error
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
+}
