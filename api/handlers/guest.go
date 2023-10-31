@@ -93,38 +93,30 @@ func SaveStoryForGuest(c echo.Context) error {
 		"data":   map[string]any{},
 	})
 }
-
 func ListGuestStories(c echo.Context) error {
 	var guests []models.Guest
-	var startDate, endDate time.Time
-	var r *gorm.DB
+	dateCond := db.Where("1 = 1")
+	defaultCond := map[string]any{"jwt_token": utils.GetToken(c)}
 
-	if c.QueryParam("start_date") != "" && c.QueryParam("end_date") != "" {
-		var err error
-		startDate, err = time.Parse(time.DateOnly, c.QueryParam("start_date"))
+	if c.QueryParam("story_type") == models.STORY_TYPE_EXPLORE {
+		defaultCond["story_to"] = time.Time{}
+	} else if c.QueryParam("start_date") != "" && c.QueryParam("end_date") != "" {
+		startDate, err := time.Parse(time.DateOnly, c.QueryParam("start_date"))
 		if err != nil {
 			return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 		}
-		endDate, err = time.Parse(time.DateOnly, c.QueryParam("end_date"))
+		endDate, err := time.Parse(time.DateOnly, c.QueryParam("end_date"))
 		if err != nil {
 			return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 		}
-
-		r = db.Preload("Story").
-			Where(models.Guest{JwtToken: utils.GetToken(c)}).
-			Where("story_to >= ? AND story_to <= ?", startDate, endDate).
-			Find(&guests)
-	} else if c.QueryParam("story_type") == models.STORY_TYPE_EXPLORE {
-		r = db.Preload("Story").
-			Model(models.Guest{}).
-			Where(map[string]any{"jwt_token": utils.GetToken(c), "story_to": time.Time{}}).
-			Find(&guests)
-	} else {
-		r = db.Preload("Story").Where(models.Guest{JwtToken: utils.GetToken(c)}).Find(&guests)
+		dateCond = db.Where("`story_to` >= ? AND `story_to` <= ?", startDate, endDate)
 	}
 
-	if r.RowsAffected == 0 {
+	r := db.Preload("Story").Where(dateCond).Where(defaultCond).Find(&guests)
+	if r.Error == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if r.Error != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 
 	var stories []models.Story
@@ -132,8 +124,5 @@ func ListGuestStories(c echo.Context) error {
 		stories = append(stories, guest.Story)
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{
-		"status": true,
-		"data":   map[string]any{"stories": stories},
-	})
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": stories})
 }
