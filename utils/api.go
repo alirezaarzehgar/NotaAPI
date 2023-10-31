@@ -44,7 +44,7 @@ func ReturnAlert(c echo.Context, status int, alertKey string, extra ...string) e
 	})
 }
 
-func HashPassword(pass string) string {
+func CreateSHA256(pass string) string {
 	hashByte := sha256.Sum256([]byte(pass))
 	hashStr := hex.EncodeToString(hashByte[:])
 	return hashStr

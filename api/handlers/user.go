@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/mail"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 
 	"github.com/Asrez/NotaAPI/models"
 	"github.com/Asrez/NotaAPI/utils"
@@ -27,14 +29,12 @@ func Register(c echo.Context) error {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "invalid_email")
 	}
 
-	user.Password = utils.HashPassword(user.Password)
-
-	r := db.Create(&user)
-	switch {
-	case r.Error != nil:
-		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
-	case r.RowsAffected == 0:
+	user.Password = utils.CreateSHA256(user.Password)
+	err := db.Create(&user).Error
+	if err == gorm.ErrDuplicatedKey {
 		return utils.ReturnAlert(c, http.StatusConflict, "user_conflict")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 
 	token := utils.CreateUserToken(user.ID, user.Email, user.Username)
@@ -55,7 +55,7 @@ func Login(c echo.Context) error {
 	if err := json.NewDecoder(c.Request().Body).Decode(&user); err != nil {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 	}
-	fillteredUser := models.User{Email: user.Email, Password: utils.HashPassword(user.Password)}
+	fillteredUser := models.User{Email: user.Email, Password: utils.CreateSHA256(user.Password)}
 	db.Where(fillteredUser).First(&user).Count(&loggedin)
 
 	if loggedin == 0 {
@@ -97,4 +97,40 @@ func GetStoryCount(c echo.Context) error {
 			"normal_story_count": storyNormalCount,
 		},
 	})
+}
+
+func UserDeleteAccount(c echo.Context) error {
+	user := models.User{}
+	userId := utils.GetUserId(c)
+
+	err := db.Select("email").First(&user, userId).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	user.Email = utils.CreateSHA256(fmt.Sprint(userId)) + "+" + user.Email
+	err = db.Save(&user).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	err = db.Delete(&models.User{}, userId).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	err = db.Delete(&models.Token{}, "user_id", userId).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }

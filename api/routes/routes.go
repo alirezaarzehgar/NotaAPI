@@ -21,12 +21,13 @@ func Init() *echo.Echo {
 
 	g := e.Group("", echojwt.WithConfig(echojwt.Config{SigningKey: config.JwtSecret()}), middlewares.CheckToken)
 	g.Static("/", config.Assets())
-	g.GET("/user/story/count", handlers.GetStoryCount)
-	g.DELETE("/user/delete-account", todo)
+
+	u := g.Group("", middlewares.UserOnly)
+	u.GET("/user/story/count", handlers.GetStoryCount)
+	u.DELETE("/user/delete-account", handlers.UserDeleteAccount)
 
 	g.GET("/story/:code", handlers.GetStoryInfo)
 	g.GET("/story/exists/:code", handlers.CheckStoryExistance)
-	u := g.Group("", middlewares.UserOnly)
 	u.POST("/story/upload-asset", handlers.UploadAsset, middlewares.UserOnly)
 	u.POST("/story/create", handlers.CreateStory)
 	u.POST("/story/change-status/:code", handlers.ChangeStoryStatus)

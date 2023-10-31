@@ -13,7 +13,7 @@ func usersMigrate(db *gorm.DB) error {
 	admin := models.User{
 		Username: c.Username,
 		Email:    c.Email,
-		Password: utils.HashPassword(c.Password),
+		Password: utils.CreateSHA256(c.Password),
 		Role:     models.USERS_ROLE_ADMIN,
 	}
 	return db.Create(&admin).Error
