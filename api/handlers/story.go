@@ -140,7 +140,7 @@ func CheckStoryExistance(c echo.Context) error {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"status": true})
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
 
 func ListStories(c echo.Context) error {
@@ -175,7 +175,10 @@ func ListStories(c echo.Context) error {
 		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"status": stories})
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": true,
+		"data":   map[string]any{"stories": stories},
+	})
 }
 
 func GetStoryInfo(c echo.Context) error {
@@ -198,7 +201,10 @@ func GetStoryInfo(c echo.Context) error {
 	}
 
 	if isUser && story.UserID == userId {
-		return c.JSON(http.StatusOK, map[string]any{"story": story})
+		return c.JSON(http.StatusOK, map[string]any{
+			"status": true,
+			"data":   map[string]any{"story": story},
+		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]any{

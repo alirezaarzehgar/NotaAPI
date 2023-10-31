@@ -71,10 +71,7 @@ func EditGuestSettings(c echo.Context) error {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{
-		"status": true,
-		"data":   map[string]any{},
-	})
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
 
 func SaveStoryForGuest(c echo.Context) error {
@@ -88,10 +85,7 @@ func SaveStoryForGuest(c echo.Context) error {
 	if err != nil {
 		return utils.ReturnAlert(c, http.StatusConflict, "conflict")
 	}
-	return c.JSON(http.StatusOK, map[string]any{
-		"status": true,
-		"data":   map[string]any{},
-	})
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
 func ListGuestStories(c echo.Context) error {
 	var guests []models.Guest

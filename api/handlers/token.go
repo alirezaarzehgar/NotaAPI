@@ -21,5 +21,5 @@ func CheckToken(c echo.Context) error {
 		return utils.ReturnAlert(c, http.StatusNotFound, "token_not_found")
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"status": true})
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
