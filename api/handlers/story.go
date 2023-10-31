@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 
 	"github.com/Asrez/NotaAPI/api/validations"
 	"github.com/Asrez/NotaAPI/config"
@@ -139,4 +140,45 @@ func CheckStoryExistance(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true})
+}
+
+func ListStories(c echo.Context) error {
+	return nil
+}
+
+func GetStoryInfo(c echo.Context) error {
+	var story models.Story
+	isUser := false
+	userId := utils.GetUserId(c)
+	code := c.Param("code")
+
+	if userId > 0 {
+		isUser = true
+	}
+
+	r := db.Where(models.Story{Code: code, IsPublic: true}).
+		Or(map[string]any{"user_id": userId, "code": code}).First(&story)
+	if r.Error == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	}
+	if r.Error != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	if isUser && story.UserID == userId {
+		return c.JSON(http.StatusOK, map[string]any{"story": story})
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": true,
+		"data": map[string]any{
+			"type":             story.Type,
+			"code":             story.Code,
+			"name":             story.Name,
+			"from":             story.From,
+			"to":               story.To,
+			"background":       story.BackgroundUrl,
+			"background_color": story.BackgroundColor,
+		},
+	})
 }
