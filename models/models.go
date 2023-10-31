@@ -41,13 +41,15 @@ type Token struct {
 }
 
 type Story struct {
-	gorm.Model
-	UserID uint      `json:"user_id"`
-	Code   string    `gorm:"not null; unique" json:"code"`
-	Type   string    `gorm:"default:normal" json:"type"`
-	Name   string    `gorm:"not null" json:"name"`
-	From   time.Time `json:"from"`
-	To     time.Time `json:"to"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	UserID    uint           `json:"user_id"`
+	Code      string         `gorm:"not null; unique; primaryKey" json:"code"`
+	Type      string         `gorm:"default:normal" json:"type"`
+	Name      string         `gorm:"not null" json:"name"`
+	From      time.Time      `json:"from"`
+	To        time.Time      `json:"to"`
 
 	FinalImageUrl        string `gorm:"not null" json:"final_image"`
 	BackgroundUrl        string `gorm:"not null" json:"background_url"`
@@ -69,7 +71,9 @@ type Story struct {
 
 type Guest struct {
 	gorm.Model
-	TokenID uint  `gorm:"not null" json:"token_id"`
-	StoryID uint  `gorm:"not null" json:"story_id"`
-	Story   Story `gorm:"not null" json:"story"`
+	StoryCode string    `gorm:"not null; unique" json:"story_code"`
+	StoryTo   time.Time `json:"story_to"`
+	JwtToken  string    `gorm:"not null" json:"token"`
+
+	Story Story `gorm:"foreignKey:StoryCode"`
 }

@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 
 	"github.com/Asrez/NotaAPI/models"
 	"github.com/Asrez/NotaAPI/utils"
@@ -72,5 +74,66 @@ func EditGuestSettings(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]any{
 		"status": true,
 		"data":   map[string]any{},
+	})
+}
+
+func SaveStoryForGuest(c echo.Context) error {
+	var story models.Story
+	r := db.First(&story, "code", c.Param("code"))
+	if r.RowsAffected == 0 {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	}
+
+	err := db.Create(&models.Guest{JwtToken: utils.GetToken(c), StoryCode: story.Code, StoryTo: story.To}).Error
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusConflict, "conflict")
+	}
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": true,
+		"data":   map[string]any{},
+	})
+}
+
+func ListGuestStories(c echo.Context) error {
+	var guests []models.Guest
+	var startDate, endDate time.Time
+	var r *gorm.DB
+
+	if c.QueryParam("start_date") != "" && c.QueryParam("end_date") != "" {
+		var err error
+		startDate, err = time.Parse(time.DateOnly, c.QueryParam("start_date"))
+		if err != nil {
+			return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
+		}
+		endDate, err = time.Parse(time.DateOnly, c.QueryParam("end_date"))
+		if err != nil {
+			return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
+		}
+
+		r = db.Preload("Story").
+			Where(models.Guest{JwtToken: utils.GetToken(c)}).
+			Where("story_to >= ? AND story_to <= ?", startDate, endDate).
+			Find(&guests)
+	} else if c.QueryParam("story_type") == models.STORY_TYPE_EXPLORE {
+		r = db.Preload("Story").
+			Model(models.Guest{}).
+			Where(map[string]any{"jwt_token": utils.GetToken(c), "story_to": time.Time{}}).
+			Find(&guests)
+	} else {
+		r = db.Preload("Story").Where(models.Guest{JwtToken: utils.GetToken(c)}).Find(&guests)
+	}
+
+	if r.RowsAffected == 0 {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	}
+
+	var stories []models.Story
+	for _, guest := range guests {
+		stories = append(stories, guest.Story)
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": true,
+		"data":   map[string]any{"stories": stories},
 	})
 }

@@ -36,9 +36,9 @@ func Init() *echo.Echo {
 	g = g.Group("", middlewares.GuestOnly)
 	g.GET("/guest/settings", handlers.GetGuestSettings)
 	g.PUT("/guest/settings", handlers.EditGuestSettings)
+	g.POST("/guest/save-story/:code", handlers.SaveStoryForGuest)
+	g.GET("/guest/stories", handlers.ListGuestStories)
 	g.DELETE("/guest/delete-account", todo)
-	g.POST("/guest/save-story", todo)
-	g.GET("/guest/stories", todo)
 
 	return e
 }

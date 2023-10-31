@@ -19,6 +19,8 @@ import (
 
 var alertsDatabase map[string]string
 
+const DATE_FORMAT = "2006-01-02"
+
 func Alert(alertKey string) string {
 	if alertsDatabase == nil {
 		data, err := os.ReadFile(config.AlertDb())
