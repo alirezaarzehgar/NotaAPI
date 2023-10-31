@@ -239,3 +239,25 @@ func EditStoryInfo(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
+
+func DeleteStory(c echo.Context) error {
+	story := models.Story{}
+	err := db.First(&story, "code", c.Param("code")).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	err = db.Model(&story).Association("Tokens").Clear()
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	err = db.Delete(&story).Error
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
+}

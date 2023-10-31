@@ -33,7 +33,7 @@ func Init() *echo.Echo {
 	u.POST("/story/change-status/:code", handlers.ChangeStoryStatus)
 	u.GET("/story/stories", handlers.ListStories)
 	u.PUT("/story/:code", handlers.EditStoryInfo)
-	u.DELETE("/story/:code", todo)
+	u.DELETE("/story/:code", handlers.DeleteStory)
 	u.POST("/story/convert", todo)
 
 	g = g.Group("", middlewares.GuestOnly)
