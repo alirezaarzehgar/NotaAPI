@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"time"
 
@@ -76,24 +77,32 @@ func EditGuestSettings(c echo.Context) error {
 
 func SaveStoryForGuest(c echo.Context) error {
 	var story models.Story
-	r := db.First(&story, "code", c.Param("code"))
-	if r.RowsAffected == 0 {
+	err := db.First(&story, "code", c.Param("code")).Error
+	if err == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	}
 
-	err := db.Create(&models.Guest{JwtToken: utils.GetToken(c), StoryCode: story.Code, StoryTo: story.To}).Error
-	if err != nil {
-		return utils.ReturnAlert(c, http.StatusConflict, "conflict")
+	var token models.Token
+	err = db.Preload("SavedStories").First(&token, "jwt_token", utils.GetToken(c)).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	}
+
+	err = db.Model(&token).Association("SavedStories").Append(&story)
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
+
 func ListGuestStories(c echo.Context) error {
-	var guests []models.Guest
-	dateCond := db.Where("1 = 1")
-	defaultCond := map[string]any{"jwt_token": utils.GetToken(c)}
+	conditions := "is_public = ?"
+	args := []any{"", true}
 
 	if c.QueryParam("story_type") == models.STORY_TYPE_EXPLORE {
-		defaultCond["story_to"] = time.Time{}
+		conditions += " AND `to` = ?"
+		args = append(args, time.Time{})
 	} else if c.QueryParam("start_date") != "" && c.QueryParam("end_date") != "" {
 		startDate, err := time.Parse(time.DateOnly, c.QueryParam("start_date"))
 		if err != nil {
@@ -103,35 +112,43 @@ func ListGuestStories(c echo.Context) error {
 		if err != nil {
 			return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 		}
-		dateCond = db.Where("`story_to` >= ? AND `story_to` <= ?", startDate, endDate)
+
+		conditions += " AND `to` >= ? AND `to` <= ?"
+		args = append(args, startDate, endDate)
 	}
 
-	r := db.Preload("Story", "is_public = true").Where(dateCond).Where(defaultCond).Find(&guests)
-	if r.Error == gorm.ErrRecordNotFound {
+	var token models.Token
+	args[0] = conditions
+	err := db.Preload("SavedStories", args...).First(&token, "jwt_token", utils.GetToken(c)).Error
+
+	if err == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
-	} else if r.Error != nil {
-		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
 	}
 
-	var stories []models.Story
-	for _, guest := range guests {
-		if guest.Story != nil {
-			stories = append(stories, *guest.Story)
-		}
-	}
-
-	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": stories})
+	return c.JSON(http.StatusOK, token.SavedStories)
 }
 
 func GuestDeleteAccount(c echo.Context) error {
-	err := db.Delete(&models.Token{}, "jwt_token=?", utils.GetToken(c)).Error
-	if err != nil {
-		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	var token models.Token
+
+	err := db.First(&token, "jwt_token", utils.GetToken(c)).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
 	}
 
-	err = db.Delete(&models.Guest{}, "jwt_token=?", utils.GetToken(c)).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	err = db.Model(&token).Association("SavedStories").Clear()
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
+	}
+
+	err = db.Delete(&token, token.ID).Error
+	log.Println(err)
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
 	}
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})

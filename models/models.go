@@ -38,6 +38,8 @@ type Token struct {
 
 	Notification bool   `gorm:"default:false" json:"notification"`
 	GCMToken     string `json:"gcm_token"`
+
+	SavedStories []Story `gorm:"many2many:token_stories" json:"saved_stories"`
 }
 
 type Story struct {
@@ -67,13 +69,6 @@ type Story struct {
 	AttachedFileUrl string `json:"attached_file_url"`
 
 	IsPublic bool `gorm:"default:false" json:"is_public"`
-}
 
-type Guest struct {
-	gorm.Model
-	StoryCode string    `gorm:"not null; unique" json:"story_code"`
-	StoryTo   time.Time `json:"story_to"`
-	JwtToken  string    `gorm:"not null" json:"token"`
-
-	Story *Story `gorm:"foreignKey:StoryCode"`
+	Tokens []Token `gorm:"many2many:token_stories" json:"-"`
 }
