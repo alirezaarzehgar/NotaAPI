@@ -40,7 +40,7 @@ func Init() *echo.Echo {
 	g.PUT("/guest/settings", handlers.EditGuestSettings)
 	g.POST("/guest/save-story/:code", handlers.SaveStoryForGuest)
 	g.GET("/guest/stories", handlers.ListGuestStories)
-	g.DELETE("/guest/delete-account", todo)
+	g.DELETE("/guest/delete-account", handlers.GuestDeleteAccount)
 
 	return e
 }

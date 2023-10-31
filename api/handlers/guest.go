@@ -122,3 +122,17 @@ func ListGuestStories(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": stories})
 }
+
+func GuestDeleteAccount(c echo.Context) error {
+	err := db.Delete(&models.Token{}, "jwt_token=?", utils.GetToken(c)).Error
+	if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	err = db.Delete(&models.Guest{}, "jwt_token=?", utils.GetToken(c)).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
+}
