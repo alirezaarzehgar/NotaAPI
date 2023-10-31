@@ -75,5 +75,5 @@ type Guest struct {
 	StoryTo   time.Time `json:"story_to"`
 	JwtToken  string    `gorm:"not null" json:"token"`
 
-	Story Story `gorm:"foreignKey:StoryCode"`
+	Story *Story `gorm:"foreignKey:StoryCode"`
 }

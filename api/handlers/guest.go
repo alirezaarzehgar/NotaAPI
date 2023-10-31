@@ -106,7 +106,7 @@ func ListGuestStories(c echo.Context) error {
 		dateCond = db.Where("`story_to` >= ? AND `story_to` <= ?", startDate, endDate)
 	}
 
-	r := db.Preload("Story").Where(dateCond).Where(defaultCond).Find(&guests)
+	r := db.Preload("Story", "is_public = true").Where(dateCond).Where(defaultCond).Find(&guests)
 	if r.Error == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	} else if r.Error != nil {
@@ -115,7 +115,9 @@ func ListGuestStories(c echo.Context) error {
 
 	var stories []models.Story
 	for _, guest := range guests {
-		stories = append(stories, guest.Story)
+		if guest.Story != nil {
+			stories = append(stories, *guest.Story)
+		}
 	}
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": stories})
