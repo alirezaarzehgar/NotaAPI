@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -143,7 +144,38 @@ func CheckStoryExistance(c echo.Context) error {
 }
 
 func ListStories(c echo.Context) error {
-	return nil
+	var stories []models.Story
+	dateCond := db.Where("1 = 1")
+	defaultCond := map[string]any{"user_id": utils.GetUserId(c), "is_public": true}
+
+	if c.QueryParam("story_type") == models.STORY_TYPE_EXPLORE {
+		defaultCond["type"] = models.STORY_TYPE_EXPLORE
+	} else if c.QueryParam("start_date") != "" && c.QueryParam("end_date") != "" {
+		startDate, err := time.Parse(time.DateOnly, c.QueryParam("start_date"))
+		if err != nil {
+			return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
+		}
+		endDate, err := time.Parse(time.DateOnly, c.QueryParam("end_date"))
+		if err != nil {
+			return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
+		}
+
+		dateCond = db.Where("`to` >= ? AND `to` <= ?", startDate, endDate)
+	}
+
+	if v, err := strconv.ParseBool(c.QueryParam("is_public")); err == nil {
+		defaultCond["is_public"] = v
+	}
+
+	r := db.Where(dateCond).Where(defaultCond).Find(&stories)
+	if r.Error == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	}
+	if r.Error != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"status": stories})
 }
 
 func GetStoryInfo(c echo.Context) error {
