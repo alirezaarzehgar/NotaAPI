@@ -220,3 +220,22 @@ func GetStoryInfo(c echo.Context) error {
 		},
 	})
 }
+
+func EditStoryInfo(c echo.Context) error {
+	var story models.Story
+
+	if err := json.NewDecoder(c.Request().Body).Decode(&story); err != nil {
+		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
+	}
+
+	err := db.Where(models.Story{UserID: utils.GetUserId(c), Code: c.Param("code")}).
+		Omit("code", "is_public", "type", "user_id").
+		Updates(&story).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
+}

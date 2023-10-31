@@ -31,7 +31,7 @@ func Init() *echo.Echo {
 	u.POST("/story/create", handlers.CreateStory)
 	u.POST("/story/change-status/:code", handlers.ChangeStoryStatus)
 	u.GET("/story/stories", handlers.ListStories)
-	u.PUT("/story/:code", todo)
+	u.PUT("/story/:code", handlers.EditStoryInfo)
 	u.DELETE("/story/:code", todo)
 	u.POST("/story/convert", todo)
 
