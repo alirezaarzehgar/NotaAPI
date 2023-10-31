@@ -103,7 +103,7 @@ func UserDeleteAccount(c echo.Context) error {
 	user := models.User{}
 	userId := utils.GetUserId(c)
 
-	err := db.Select("email").First(&user, userId).Error
+	err := db.First(&user, userId).Error
 	if err == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	} else if err != nil {
