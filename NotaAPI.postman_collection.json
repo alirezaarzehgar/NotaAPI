@@ -1,0 +1,688 @@
+{
+	"info": {
+		"_postman_id": "a95dd603-61a5-4f6a-a6d3-c5667837d00c",
+		"name": "NotaAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15211685"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "User Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user\": \"alireza\",\n    \"email\": \"mohammad@gmail.com\",\n    \"pass\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Count Stories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/delete-account",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"delete-account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "guest",
+			"item": [
+				{
+					"name": "Create Guest Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"screen_height\": 140,\n    \"screen_width\": 123,\n    \"resolution\": 4040,\n    \"device_type\": \"IOS\",\n    \"version\": 21\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/guest/create-token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"guest",
+								"create-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get settings",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJeXHVmZmZkXHVmZmZkXHVmZmZkYVx1ZmZmZFx1ZmZmZG9cdWZmZmRzIiwiZXhwIjoxNzAxMjAwNTAwfQ.9BAOO9tujJ39mSfsxj_Z43WNuLLuCi2MvGdOnhQKlEM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/guest/settings",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"guest",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit settings",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{guest_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"notification\": true,\n    \"gcm_token\": \"asdasdasdasdasd\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/guest/settings",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"guest",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{guest_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/guest/save-story/:code",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"guest",
+								"save-story",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "a868a84c6b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get list of stories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{guest_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/guest/stories?start_date=2024-11-01&end_date=2024-11-29",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"guest",
+								"stories"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2024-11-01"
+								},
+								{
+									"key": "end_date",
+									"value": "2024-11-29"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{guest_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/guest/delete-account",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"guest",
+								"delete-account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "story",
+			"item": [
+				{
+					"name": "Upload Asset",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/story/upload-asset",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"story",
+								"upload-asset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"normal\",\n    \"name\": \"Test\",\n    \"from\": \"2026-11-19T19:45:38+03:30\",\n    \"to\": \"2026-11-29T19:45:38+03:30\",\n    \"final_image\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"background_url\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"main_background_url\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"cropped_background_url\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"background_color\": \"#213445\",\n    \"logo_url\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"logo_height\": 120,\n    \"logo_width\": 200,\n    \"logo_x_location\": 42,\n    \"logo_y_location\": 34,\n    \"attached_webpage\": \"http://www.google.com\",\n    \"attached_file_url\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"is_public\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/story/create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"story",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change story status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_public\": true\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/story/change-status/:code",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"story",
+								"change-status",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "694cf047bd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check for story existance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/story/exists/:code",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"story",
+								"exists",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "694cf047bd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get story  info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/story/:code",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"story",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "f9d089c99e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get stories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/story/stories",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"story",
+								"stories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Hello\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/story/:code",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"story",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "2333098eb5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/story/:code",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"story",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Convert Story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"2026-11-19T19:45:38+03:30\",\n    \"to\": \"2026-11-29T19:45:38+03:30\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/story/convert/:code",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"story",
+								"convert",
+								":code"
+							],
+							"variable": [
+								{
+									"key": "code",
+									"value": "224dee5bc0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Check Token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/token/check",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"token",
+						"check"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://127.0.0.1:8000"
+		},
+		{
+			"key": "user_token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtb2hhbW1hZEBnbWFpbC5jb20iLCJzdWIiOiJhbGlyZXphIiwiZXhwIjoxNzAxMzcyNTYyLCJqdGkiOiI1In0.mMjwHz7DTTIUA-_1wLZpCQdzWjKAM9Ex2wVGPQe4iho"
+		},
+		{
+			"key": "guest_token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiLIlSdhXHVmZmZkXHUwMDFjXHVmZmZkXHVmZmZke2YiLCJleHAiOjE3MDEzNzI1NjJ9.5zhQtasOUTqv0O4DGLtG6tO9N9LNPSOk5PZ5pfEIS6c"
+		}
+	]
+}
