@@ -26,8 +26,13 @@ func setLogOutput() {
 
 func InitLogger() {
 	setLogOutput()
+	log.SetFlags(log.Ltime | log.Lshortfile)
 	gocron.Every(1).Day().Do(setLogOutput)
 	gocron.Start()
+}
+
+func GetLogger() *log.Logger {
+	return log.New(writer, "", log.Ltime|log.Lshortfile)
 }
 
 func stopLogger() {

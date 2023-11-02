@@ -3,10 +3,14 @@ package main
 import (
 	"log"
 
-	"github.com/Asrez/NotaAPI/config"
-	"github.com/Asrez/NotaAPI/routes"
-	"github.com/Asrez/NotaAPI/utils"
 	"github.com/joho/godotenv"
+
+	"github.com/Asrez/NotaAPI/api/handlers"
+	"github.com/Asrez/NotaAPI/api/middlewares"
+	"github.com/Asrez/NotaAPI/api/routes"
+	"github.com/Asrez/NotaAPI/config"
+	"github.com/Asrez/NotaAPI/database"
+	"github.com/Asrez/NotaAPI/utils"
 )
 
 func main() {
@@ -15,6 +19,24 @@ func main() {
 		log.Fatal("faild to load .env: ", err)
 	}
 	utils.InitLogger()
+
+	dbConf, err := config.Db()
+	if err != nil {
+		log.Fatal(".env: ", err)
+	}
+
+	db, err := database.Init(dbConf)
+	if err != nil {
+		log.Fatal("database: ", err)
+	}
+
+	if err := database.Migrate(db); err != nil {
+		log.Fatal("migrate: ", err)
+	}
+
+	middlewares.SetDB(db)
+	handlers.SetDB(db)
+
 	log.Println("Start application")
 	if err := routes.Init().Start(config.ListenerAddr()); err != nil {
 		log.Print("echo start:", err)

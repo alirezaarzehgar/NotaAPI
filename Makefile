@@ -1,4 +1,4 @@
-APP_ENVS := DB_HOSTNAME=localhost
+APP_ENVS := MYSQL_HOST=localhost
 
 all: prod
 
