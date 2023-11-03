@@ -16,7 +16,7 @@ func GetWrongStoryField(story models.Story) string {
 		if time.Until(story.To) < 0 || story.To.Sub(story.From) <= 0 {
 			return "to"
 		}
-		if _, err := url.ParseRequestURI(story.AttachedWebpage); err != nil {
+		if _, err := url.ParseRequestURI(story.AttachedWebpage); story.AttachedWebpage != "" && err != nil {
 			return "attached_webpage"
 		}
 	}

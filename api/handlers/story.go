@@ -45,8 +45,9 @@ func UploadAsset(c echo.Context) error {
 	}
 
 	dirpath := utils.GetUserDir(utils.GetUserId(c))
-	if _, err := os.Stat(dirpath); err != nil {
-		if err := os.Mkdir(dirpath, os.ModePerm); err != nil {
+	assetsDir := config.Assets() + "/" + dirpath
+	if _, err := os.Stat(assetsDir); err != nil {
+		if err := os.Mkdir(assetsDir, os.ModePerm); err != nil {
 			log.Println("mkdir dirpath: ", err)
 			return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 		}
