@@ -53,17 +53,22 @@ type Story struct {
 	From      time.Time      `json:"from"`
 	To        time.Time      `json:"to"`
 
-	FinalImageUrl        string `gorm:"not null" json:"final_image"`
-	BackgroundUrl        string `gorm:"not null" json:"background_url"`
-	MainBackgroundUrl    string `json:"main_background_url"`
-	CroppedBackgroundUrl string `json:"cropped_background_url"`
-	BackgroundColor      string `gorm:"not null" json:"background_color"`
+	FinalImageUrl     string `gorm:"not null" json:"final_image"`
+	BackgroundUrl     string `gorm:"not null" json:"background_url"`
+	MainBackgroundUrl string `json:"main_background_url"`
+	BackgroundColor   string `gorm:"not null" json:"background_color"`
 
 	LogoUrl       string `json:"logo_url"`
 	LogoHeight    uint   `json:"logo_height"`
 	LogoWidth     uint   `json:"logo_width"`
 	LogoXLocation uint   `json:"logo_x_location"`
 	LogoYLocation uint   `json:"logo_y_location"`
+	LogoYScale    uint   `json:"logo_scale"`
+
+	Text         string `gorm:"not null" json:"text"`
+	TextPosition string `gorm:"not null" json:"text_position"`
+	TextSize     uint   `gorm:"not null" json:"text_size"`
+	IsShared     bool   `gorm:"not null" json:"is_shared"`
 
 	AttachedWebpage string `json:"attached_webpage"`
 	AttachedFileUrl string `json:"attached_file_url"`
