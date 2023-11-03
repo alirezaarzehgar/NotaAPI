@@ -207,18 +207,7 @@ func GetStoryInfo(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{
-		"status": true,
-		"data": map[string]any{
-			"type":             story.Type,
-			"code":             story.Code,
-			"name":             story.Name,
-			"from":             story.From,
-			"to":               story.To,
-			"background":       story.BackgroundUrl,
-			"background_color": story.BackgroundColor,
-		},
-	})
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": story})
 }
 
 func EditStoryInfo(c echo.Context) error {
