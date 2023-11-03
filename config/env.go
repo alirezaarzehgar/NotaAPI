@@ -14,7 +14,11 @@ func JwtSecret() []byte {
 }
 
 func LogDirectory() string {
-	return os.Getenv("LOG_DIRECTORY")
+	dir := os.Getenv("LOG_DIRECTORY")
+	if _, err := os.Stat(dir); err != nil {
+		os.MkdirAll(dir, os.ModePerm)
+	}
+	return dir
 }
 
 type DbConf struct {
@@ -58,5 +62,9 @@ func Admin() AdminConfig {
 }
 
 func Assets() string {
-	return os.Getenv("ASSETS_DIRECTORY")
+	dir := os.Getenv("ASSETS_DIRECTORY")
+	if _, err := os.Stat(dir); err != nil {
+		os.MkdirAll(dir, os.ModePerm)
+	}
+	return dir
 }
