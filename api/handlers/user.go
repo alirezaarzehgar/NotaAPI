@@ -134,3 +134,28 @@ func UserDeleteAccount(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
+
+func EditUserProfile(c echo.Context) error {
+	var user models.User
+
+	if err := json.NewDecoder(c.Request().Body).Decode(&user); err != nil {
+		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
+	}
+
+	if utils.ValidatePassword(user.Password) {
+		return utils.ReturnAlert(c, http.StatusBadRequest, "insecure_password")
+	}
+	if _, err := mail.ParseAddress(user.Email); err != nil {
+		return utils.ReturnAlert(c, http.StatusBadRequest, "invalid_email")
+	}
+
+	user.Password = utils.CreateSHA256(user.Password)
+	err := db.Where(utils.GetUserId(c)).Omit("role", "blocked", "verified", "user_id").Updates(&user).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
+}

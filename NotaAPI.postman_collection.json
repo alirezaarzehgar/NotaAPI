@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a95dd603-61a5-4f6a-a6d3-c5667837d00c",
+		"_postman_id": "49c381b2-7b8e-4133-89df-41805c36f270",
 		"name": "NotaAPI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "15211685"
@@ -39,8 +39,27 @@
 				{
 					"name": "User Login",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user\": \"alireza\",\n    \"email\": \"mohammad@gmail.com\",\n    \"pass\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{url}}/user/login",
 							"host": [
@@ -105,6 +124,43 @@
 							"path": [
 								"user",
 								"delete-account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit user profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user\": \"mohammad\",\n    \"email\": \"yaya@gmail.com\",\n    \"pass\": \"xxxxxxxxxxxxxxxxx\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"profile"
 							]
 						}
 					},
@@ -678,7 +734,7 @@
 		},
 		{
 			"key": "user_token",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtb2hhbW1hZEBnbWFpbC5jb20iLCJzdWIiOiJhbGlyZXphIiwiZXhwIjoxNzAxNjE5NDQ0LCJqdGkiOiIyIn0.DgxsFvP2tO0Gz36jv6Bkr1vhhmqQitrokwOW9opsVjo"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtb2hhbW1hZEBnbWFpbC5jb20iLCJzdWIiOiJhbGlyZXphIiwiZXhwIjoxNzAxNjMzMjMwLCJqdGkiOiIyIn0.CgpdXZuT8_bCS5i_93BoeY-q0WwpEUpCGoF4wwt3roo"
 		},
 		{
 			"key": "guest_token",
