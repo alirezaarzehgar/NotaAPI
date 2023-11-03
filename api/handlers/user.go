@@ -37,15 +37,7 @@ func Register(c echo.Context) error {
 		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 
-	token := utils.CreateUserToken(user.ID, user.Email, user.Username)
-	if err := db.Create(&models.Token{UserID: user.ID, JwtToken: token}).Error; err != nil {
-		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
-	}
-
-	return c.JSON(http.StatusOK, map[string]any{
-		"status": true,
-		"data":   map[string]any{"token": token},
-	})
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
 
 func Login(c echo.Context) error {
