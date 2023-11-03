@@ -13,7 +13,7 @@ func GetWrongStoryField(story models.Story) string {
 	}
 
 	if story.Type == models.STORY_TYPE_NORMAL {
-		if time.Until(story.To) < 0 || story.To.Sub(story.From) <= 0 {
+		if time.Until(*story.To) < 0 || story.To.Sub(*story.From) <= 0 {
 			return "to"
 		}
 		if _, err := url.ParseRequestURI(story.AttachedWebpage); story.AttachedWebpage != "" && err != nil {

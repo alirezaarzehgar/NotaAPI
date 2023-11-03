@@ -262,8 +262,8 @@ func ConvertStory(c echo.Context) error {
 		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 	if story.Type == models.STORY_TYPE_NORMAL {
-		story.From = time.Time{}
-		story.To = time.Time{}
+		story.From = nil
+		story.To = nil
 		story.Type = models.STORY_TYPE_EXPLORE
 	} else {
 		var data struct {
@@ -275,8 +275,8 @@ func ConvertStory(c echo.Context) error {
 			return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 		}
 
-		story.From = data.From
-		story.To = data.To
+		story.From = &data.From
+		story.To = &data.To
 		story.Type = models.STORY_TYPE_NORMAL
 	}
 

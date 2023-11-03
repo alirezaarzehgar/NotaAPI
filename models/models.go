@@ -50,8 +50,8 @@ type Story struct {
 	Code      string         `gorm:"not null; unique; primaryKey" json:"code"`
 	Type      string         `gorm:"default:normal" json:"type"`
 	Name      string         `gorm:"not null" json:"name"`
-	From      time.Time      `json:"from"`
-	To        time.Time      `json:"to"`
+	From      *time.Time     `json:"from"`
+	To        *time.Time     `json:"to"`
 
 	FinalImageUrl     string `gorm:"not null" json:"final_image"`
 	BackgroundUrl     string `gorm:"not null" json:"background_url"`
