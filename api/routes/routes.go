@@ -3,6 +3,7 @@ package routes
 import (
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
+	echomiddleware "github.com/labstack/echo/v4/middleware"
 
 	"github.com/Asrez/NotaAPI/api/handlers"
 	"github.com/Asrez/NotaAPI/api/middlewares"
@@ -11,6 +12,7 @@ import (
 
 func Init() *echo.Echo {
 	e := echo.New()
+	e.Use(echomiddleware.CORS())
 	e.POST("/user/register", handlers.Register)
 	e.POST("/user/login", handlers.Login)
 
