@@ -12,7 +12,7 @@ dev: .env
 	$(APP_ENVS) go run .
 
 .env:
-	cp .env.example .evn
+	cp .env.example .env
 	mkdir logs assets
 
 stop:
