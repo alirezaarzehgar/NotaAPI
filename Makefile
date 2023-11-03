@@ -5,7 +5,7 @@ all: prod
 prod: stop
 	go mod vendor
 	docker-compose build
-	docker-compose up
+	docker-compose up -d
 
 dev:
 	docker-compose up db -d
