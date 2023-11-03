@@ -8,6 +8,8 @@ services:
         condition: service_completed_successfully
     links:
       - db
+    ports:
+      - ${RUNNING_PORT}:${RUNNING_PORT}
 
   wait-for-db:
     image: atkrad/wait4x
