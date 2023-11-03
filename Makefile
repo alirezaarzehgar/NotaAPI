@@ -2,7 +2,7 @@ APP_ENVS := MYSQL_HOST=localhost
 
 all: prod
 
-prod: stop
+prod: stop .env
 	go mod vendor
 	docker-compose build
 	docker-compose up -d
