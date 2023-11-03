@@ -131,7 +131,7 @@ func CheckStoryExistance(c echo.Context) error {
 	var count int64
 
 	err := db.Model(&models.Story{}).
-		Where(models.Story{Code: c.Param("code"), IsPublic: true}).
+		Where(models.Story{Code: c.Param("code")}).
 		Count(&count).Error
 	if err != nil {
 		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
@@ -147,7 +147,7 @@ func CheckStoryExistance(c echo.Context) error {
 func ListStories(c echo.Context) error {
 	var stories []models.Story
 	dateCond := db.Where("1 = 1")
-	defaultCond := map[string]any{"user_id": utils.GetUserId(c), "is_public": true}
+	defaultCond := map[string]any{"user_id": utils.GetUserId(c)}
 
 	if c.QueryParam("story_type") == models.STORY_TYPE_EXPLORE {
 		defaultCond["type"] = models.STORY_TYPE_EXPLORE
@@ -192,7 +192,7 @@ func GetStoryInfo(c echo.Context) error {
 		isUser = true
 	}
 
-	r := db.Where(models.Story{Code: code, IsPublic: true}).
+	r := db.Where(models.Story{Code: code}).
 		Or(map[string]any{"user_id": userId, "code": code}).First(&story)
 	if r.Error == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
