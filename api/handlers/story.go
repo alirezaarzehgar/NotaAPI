@@ -210,6 +210,10 @@ func GetStoryInfo(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]any{
 		"status": true,
 		"data": map[string]any{
+			"text":             story.Text,
+			"text_position":    story.TextPosition,
+			"text_size":        story.TextSize,
+			"is_shared":        story.IsShared,
 			"type":             story.Type,
 			"code":             story.Code,
 			"name":             story.Name,
