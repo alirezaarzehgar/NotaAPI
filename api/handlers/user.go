@@ -142,10 +142,10 @@ func EditUserProfile(c echo.Context) error {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 	}
 
-	if utils.ValidatePassword(user.Password) {
+	if user.Password != "" && utils.ValidatePassword(user.Password) {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "insecure_password")
 	}
-	if _, err := mail.ParseAddress(user.Email); err != nil {
+	if _, err := mail.ParseAddress(user.Email); user.Email != "" && err != nil {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "invalid_email")
 	}
 
