@@ -8,7 +8,7 @@ prod: stop .env
 	docker-compose up -d
 
 dev: .env
-	docker-compose up db -d
+	docker-compose up db
 	$(APP_ENVS) go run .
 
 .env:
