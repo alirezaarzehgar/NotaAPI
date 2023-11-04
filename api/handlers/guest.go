@@ -101,8 +101,7 @@ func ListGuestStories(c echo.Context) error {
 	args := []any{"", true}
 
 	if c.QueryParam("story_type") == models.STORY_TYPE_EXPLORE {
-		conditions += " AND `to` = ?"
-		args = append(args, time.Time{})
+		conditions += " AND `to` IS NULL"
 	} else if c.QueryParam("start_date") != "" && c.QueryParam("end_date") != "" {
 		startDate, err := time.Parse(time.DateOnly, c.QueryParam("start_date"))
 		if err != nil {
