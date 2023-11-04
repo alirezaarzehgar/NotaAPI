@@ -68,7 +68,7 @@ type Story struct {
 	Text         string `gorm:"not null" json:"text"`
 	TextPosition string `gorm:"not null" json:"text_position"`
 	TextSize     uint   `gorm:"not null" json:"text_size"`
-	TextColor    uint   `gorm:"not null" json:"text_color"`
+	TextColor    string `gorm:"not null" json:"text_color"`
 	IsShared     bool   `gorm:"not null" json:"is_shared"`
 
 	AttachedWebpage string `json:"attached_webpage"`
