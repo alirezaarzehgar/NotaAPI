@@ -16,4 +16,5 @@ dev: .env
 	mkdir logs assets
 
 stop:
+	yes | docker-compose rm
 	docker-compose stop

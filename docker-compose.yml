@@ -10,6 +10,12 @@ services:
       - db
     ports:
       - ${RUNNING_PORT}:${RUNNING_PORT}
+    environment:
+      - LOG_DIRECTORY=/logs
+      - ASSETS_DIRECTORY=/assets
+    volumes:
+       - ./${LOG_DIRECTORY}:/logs
+       - ./${ASSETS_DIRECTORY}:/assets
 
   wait-for-db:
     image: atkrad/wait4x
