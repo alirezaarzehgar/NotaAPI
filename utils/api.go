@@ -9,7 +9,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/Asrez/NotaAPI/config"
@@ -36,10 +35,11 @@ func Alert(alertKey string) string {
 	return alertsDatabase[alertKey]
 }
 
-func ReturnAlert(c echo.Context, status int, alertKey string, extra ...string) error {
+func ReturnAlert(c echo.Context, status int, alertKey string, extra ...any) error {
+	DebugLog("response error:", status, "cause:", extra)
 	return c.JSON(status, map[string]any{
 		"status": false,
-		"alert":  Alert(alertKey) + strings.Join(extra, " "),
+		"alert":  Alert(alertKey),
 		"data":   map[string]any{},
 	})
 }

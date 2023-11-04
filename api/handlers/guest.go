@@ -32,7 +32,7 @@ func CreateGuestToken(c echo.Context) error {
 	json.Unmarshal(body, &token)
 	token.JwtToken = utils.CreateGuestToken()
 	if err := db.Create(&token).Error; err != nil {
-		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal", err)
 	}
 
 	return c.JSON(http.StatusOK, map[string]any{
