@@ -20,5 +20,5 @@ stop:
 	docker-compose stop
 
 update:
-	git pulll
+	git pull -f
 	make prod
