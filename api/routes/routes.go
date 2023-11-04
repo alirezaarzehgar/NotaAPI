@@ -12,6 +12,8 @@ import (
 
 func Init() *echo.Echo {
 	e := echo.New()
+	e.HTTPErrorHandler = handlers.DefaultLogHandler
+
 	if config.Debug() {
 		e.Static("/logs/", config.LogDirectory())
 		e.GET("/logs/list", handlers.ShowLogs)

@@ -3,8 +3,9 @@ package middlewares
 import (
 	"strings"
 
-	"github.com/Asrez/NotaAPI/utils"
 	"github.com/labstack/echo/v4"
+
+	"github.com/Asrez/NotaAPI/utils"
 )
 
 func LogRequests(next echo.HandlerFunc) echo.HandlerFunc {

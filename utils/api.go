@@ -40,7 +40,7 @@ func ReturnAlert(c echo.Context, status int, alertKey string, extra ...any) erro
 	return c.JSON(status, map[string]any{
 		"status": false,
 		"alert":  Alert(alertKey),
-		"data":   map[string]any{},
+		"data":   []any{},
 	})
 }
 

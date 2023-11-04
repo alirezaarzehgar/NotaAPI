@@ -28,3 +28,12 @@ func ShowCurrentLogs(c echo.Context) error {
 	url := fmt.Sprintf("/logs/%s.log", time.Now().Format("2006-01-02"))
 	return c.Redirect(http.StatusPermanentRedirect, url)
 }
+
+func DefaultLogHandler(err error, c echo.Context) {
+	he := err.(*echo.HTTPError)
+	c.JSON(he.Code, map[string]any{
+		"status": false,
+		"alert":  he.Message,
+		"data":   []any{},
+	})
+}
