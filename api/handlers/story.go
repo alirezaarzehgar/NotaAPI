@@ -226,7 +226,7 @@ func EditStoryInfo(c echo.Context) error {
 	}
 
 	err := db.Where(models.Story{UserID: utils.GetUserId(c), Code: c.Param("code")}).
-		Omit("code", "is_public", "type", "user_id").
+		Omit("code", "is_public", "user_id").
 		Updates(&story).Error
 	if err == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
