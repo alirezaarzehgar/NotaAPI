@@ -9,10 +9,9 @@ import (
 
 func LogRequests(next echo.HandlerFunc) echo.HandlerFunc {
 	return echo.HandlerFunc(func(c echo.Context) error {
-		if strings.HasPrefix(c.Request().URL.Path, "/logs") {
-			return next(c)
+		if !strings.HasPrefix(c.Request().URL.Path, "/logs") {
+			utils.DebugLog(c.Request().Method, c.Request().URL.Path)
 		}
-		utils.DebugLog(c.Request().Method, c.Request().URL.Path)
 		return next(c)
 	})
 }
