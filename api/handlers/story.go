@@ -28,17 +28,21 @@ func UploadAsset(c echo.Context) error {
 			return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 		}
 	}
+	utils.DebugLog("start saving an asset")
 
 	file, err := c.FormFile("asset")
 	if err != nil {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 	}
+	utils.DebugLog("recieve file:", file.Filename)
+
 	src, err := file.Open()
 	if err != nil {
 		log.Println("open file : ", err)
 		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 	defer src.Close()
+	utils.DebugLog("open sent file:", file.Filename)
 
 	if !utils.IsValidPath(file.Filename, isImage) {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_file")
@@ -51,19 +55,22 @@ func UploadAsset(c echo.Context) error {
 			log.Println("mkdir dirpath: ", err)
 			return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 		}
+		utils.DebugLog("create dir:", assetsDir)
 	}
 
 	filepath := fmt.Sprintf("%s/%s", dirpath, utils.GetUniqueName(file.Filename))
 	dst, err := os.Create(config.Assets() + "/" + filepath)
 	if err != nil {
-		log.Println("create ", filepath, ": ", err)
+		utils.DebugLog("create ", filepath, ": ", err)
 		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 	defer dst.Close()
+	utils.DebugLog("create asset on path:", filepath)
 
 	if _, err = io.Copy(dst, src); err != nil {
 		return err
 	}
+	utils.DebugLog("copy transfered file to assets directory")
 
 	return c.JSON(http.StatusOK, map[string]any{
 		"status": true,

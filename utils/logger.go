@@ -38,3 +38,9 @@ func GetLogger() *log.Logger {
 func stopLogger() {
 	writer.Close()
 }
+
+func DebugLog(v ...any) {
+	if config.Debug() {
+		log.Println(v...)
+	}
+}
