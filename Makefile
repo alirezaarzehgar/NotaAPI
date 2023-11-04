@@ -18,3 +18,7 @@ dev: .env
 stop:
 	yes | docker-compose rm
 	docker-compose stop
+
+update:
+	git pulll
+	make prod
