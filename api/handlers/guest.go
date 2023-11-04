@@ -152,3 +152,49 @@ func GuestDeleteAccount(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
+
+func GetGuestStoryCount(c echo.Context) error {
+	var storyNormalCount, storyExploreCount int
+	var t models.Token
+
+	err := db.Model(&models.Token{}).
+		Preload("SavedStories", "type = ?", models.STORY_TYPE_NORMAL).
+		First(&t, "jwt_token", utils.GetToken(c)).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
+	}
+	storyNormalCount = len(t.SavedStories)
+
+	err = db.Model(&models.Token{}).
+		Preload("SavedStories", "type = ?", models.STORY_TYPE_EXPLORE).
+		Select("id").
+		First(&t, "jwt_token", utils.GetToken(c)).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
+	}
+	storyExploreCount = len(t.SavedStories)
+
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": true,
+		"data": map[string]any{
+			"explore_story":      storyExploreCount > 0,
+			"normal_story_count": storyNormalCount,
+		},
+	})
+}
+
+func AvailableStoryDates(c echo.Context) error {
+	var token models.Token
+
+	err := db.Preload("SavedStories").First(&token, "jwt_token", utils.GetToken(c)).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
+	}
+	return nil
+}

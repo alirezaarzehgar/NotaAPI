@@ -10,7 +10,7 @@
 	"bad_request": "Bad request",
 	"invalid_token": "Invalid JWT token",
 	"bad_file": "Invalid file format",
-	"story_wrong": "Wrong story field:",
+	"story_wrong": "Wrong story field",
 	"dup_estory": "You can't create more that one explore story",
 	"guest_only": "You should be guest to access this page",
 	"user_only": "You should be user to access this page",
