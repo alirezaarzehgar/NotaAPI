@@ -68,3 +68,11 @@ func Assets() string {
 	}
 	return dir
 }
+
+func Debug() bool {
+	v, err := strconv.ParseBool(os.Getenv("DEBUG"))
+	if err != nil {
+		return false
+	}
+	return v
+}

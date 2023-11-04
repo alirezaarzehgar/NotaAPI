@@ -12,6 +12,12 @@ import (
 
 func Init() *echo.Echo {
 	e := echo.New()
+	if config.Debug() {
+		e.Static("/logs/", config.LogDirectory())
+		e.GET("/logs/list", handlers.ShowLogs)
+		e.GET("/logs/current", handlers.ShowCurrentLogs)
+	}
+
 	e.Use(echomiddleware.CORS())
 	e.POST("/user/register", handlers.Register)
 	e.POST("/user/login", handlers.Login)
