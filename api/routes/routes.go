@@ -13,7 +13,6 @@ import (
 func Init() *echo.Echo {
 	e := echo.New()
 	if config.Debug() {
-		e.Use(middlewares.LogRequests)
 		e.Static("/logs/", config.LogDirectory())
 		e.GET("/logs/list", handlers.ShowLogs)
 		e.GET("/logs/current", handlers.ShowCurrentLogs)
