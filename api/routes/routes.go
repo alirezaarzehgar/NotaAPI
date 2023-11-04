@@ -16,6 +16,7 @@ func Init() *echo.Echo {
 		e.Static("/logs/", config.LogDirectory())
 		e.GET("/logs/list", handlers.ShowLogs)
 		e.GET("/logs/current", handlers.ShowCurrentLogs)
+		e.Use(middlewares.LogRequests)
 	}
 
 	e.Use(echomiddleware.CORS())
