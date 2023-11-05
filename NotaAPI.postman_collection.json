@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user\": \"alireza\",\n    \"email\": \"mohammad@gmail.com\",\n    \"pass\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"\n}\n",
+							"raw": "{\n    \"user\": \"alireza\",\n    \"business_name\": \"alibusy\",\n    \"email\": \"mohammad@gmail.com\",\n    \"pass\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -190,6 +190,41 @@
 							"path": [
 								"user",
 								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check business",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/business-name-exists/:name",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"business-name-exists",
+								":name"
+							],
+							"variable": [
+								{
+									"key": "name",
+									"value": "alibusy"
+								}
 							]
 						}
 					},
@@ -793,6 +828,41 @@
 								{
 									"key": "code",
 									"value": "3505d21574"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Name exists",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/story/name-exists/:name",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"story",
+								"name-exists",
+								":name"
+							],
+							"variable": [
+								{
+									"key": "name",
+									"value": "Tests"
 								}
 							]
 						}
