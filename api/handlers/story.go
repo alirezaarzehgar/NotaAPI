@@ -154,6 +154,14 @@ func CheckStoryExistance(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
 
+func getJustAvailableQuery(db *gorm.DB, c echo.Context) *gorm.DB {
+	cond := db.Where("1 = 1")
+	if v, err := strconv.ParseBool(c.QueryParam("just_availables")); err == nil && v {
+		cond = db.Where("`to` >= ?", time.Now())
+	}
+	return cond
+}
+
 func ListStories(c echo.Context) error {
 	var stories []models.Story
 	dateCond := db.Where("1 = 1")
@@ -178,7 +186,7 @@ func ListStories(c echo.Context) error {
 		defaultCond["is_public"] = v
 	}
 
-	r := db.Where(utils.GetJustAvailableQuery(db, c)).
+	r := db.Where(getJustAvailableQuery(db, c)).
 		Where(dateCond).Where(defaultCond).Find(&stories)
 	if r.Error == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
@@ -196,7 +204,7 @@ func ListStories(c echo.Context) error {
 func GetStoryInfo(c echo.Context) error {
 	var story models.Story
 
-	r := db.Where(utils.GetJustAvailableQuery(db, c)).
+	r := db.Where(getJustAvailableQuery(db, c)).
 		Where(models.Story{Code: c.Param("code")}).First(&story)
 	if r.Error == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")

@@ -14,7 +14,6 @@ import (
 	"github.com/Asrez/NotaAPI/config"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
 var alertsDatabase map[string]string
@@ -96,12 +95,4 @@ func GetUserId(c echo.Context) uint {
 	id, _ := strconv.Atoi(claims["jti"].(string))
 	return uint(id)
 
-}
-
-func GetJustAvailableQuery(db *gorm.DB, c echo.Context) *gorm.DB {
-	cond := db.Where("1 = 1")
-	if v, err := strconv.ParseBool(c.QueryParam("just_availables")); err == nil && v {
-		cond = db.Where("`to` >= ?", time.Now())
-	}
-	return cond
 }
