@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 
+	"github.com/Asrez/NotaAPI/api/validations"
 	"github.com/Asrez/NotaAPI/models"
 	"github.com/Asrez/NotaAPI/utils"
 )
@@ -22,7 +23,7 @@ func Register(c echo.Context) error {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 	}
 
-	if utils.ValidatePassword(user.Password) {
+	if validations.ValidatePassword(user.Password) {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "insecure_password")
 	}
 	if _, err := mail.ParseAddress(user.Email); err != nil {
@@ -134,7 +135,7 @@ func EditUserProfile(c echo.Context) error {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "bad_request")
 	}
 
-	if user.Password != "" && utils.ValidatePassword(user.Password) {
+	if user.Password != "" && validations.ValidatePassword(user.Password) {
 		return utils.ReturnAlert(c, http.StatusBadRequest, "insecure_password")
 	}
 	if _, err := mail.ParseAddress(user.Email); user.Email != "" && err != nil {
