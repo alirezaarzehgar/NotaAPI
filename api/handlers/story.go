@@ -106,7 +106,10 @@ func CreateStory(c echo.Context) error {
 
 	story.UserID = utils.GetUserId(c)
 	story.Code = utils.CreateRandomString(fmt.Sprint(story), 5)
-	if err := db.Create(&story).Error; err != nil {
+	err := db.Create(&story).Error
+	if err == gorm.ErrDuplicatedKey {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "conflict")
+	} else if err != nil {
 		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
 	}
 
@@ -297,4 +300,20 @@ func ConvertStory(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
+}
+
+func CheckStoryNameExistance(c echo.Context) error {
+	var storyCount int64
+
+	err := db.First(&models.Story{}, "name", c.Param("name")).Count(&storyCount).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": storyCount >= 1,
+		"data":   []any{},
+	})
 }

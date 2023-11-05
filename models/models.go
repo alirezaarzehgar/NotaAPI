@@ -49,7 +49,7 @@ type Story struct {
 	UserID    uint           `json:"user_id"`
 	Code      string         `gorm:"not null; unique; primaryKey" json:"code"`
 	Type      string         `gorm:"default:normal" json:"type"`
-	Name      string         `gorm:"not null" json:"name"`
+	Name      string         `gorm:"not null; unique" json:"name"`
 	From      *time.Time     `json:"from"`
 	To        *time.Time     `json:"to"`
 

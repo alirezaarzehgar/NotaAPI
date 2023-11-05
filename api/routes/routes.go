@@ -39,7 +39,8 @@ func Init() *echo.Echo {
 
 	g.GET("/story/:code", handlers.GetStoryInfo)
 	g.GET("/story/exists/:code", handlers.CheckStoryExistance)
-	u.POST("/story/upload-asset", handlers.UploadAsset, middlewares.UserOnly)
+	u.POST("/story/upload-asset", handlers.UploadAsset)
+	u.POST("/story/name-exists/:name", handlers.CheckStoryNameExistance)
 	u.POST("/story/create", handlers.CreateStory)
 	u.POST("/story/change-status/:code", handlers.ChangeStoryStatus)
 	u.GET("/story/stories", handlers.ListStories)
