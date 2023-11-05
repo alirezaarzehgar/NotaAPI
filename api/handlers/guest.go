@@ -201,14 +201,46 @@ func GetGuestStoryCount(c echo.Context) error {
 	})
 }
 
-func AvailableStoryDates(c echo.Context) error {
+func ListStoryDates(c echo.Context) error {
 	var token models.Token
 
-	err := db.Preload("SavedStories").First(&token, "jwt_token", utils.GetToken(c)).Error
+	err := db.Preload("SavedStories", func(tx *gorm.DB) *gorm.DB {
+		return tx.Select("`to`, `from`, `code`").Where("`to` > ?", time.Now())
+	}).First(&token, "jwt_token", utils.GetToken(c)).Error
 	if err == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	} else if err != nil {
 		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
 	}
-	return nil
+
+	dates := make(map[time.Time]bool)
+
+	for _, story := range token.SavedStories {
+		for story.To.Compare(*story.From) >= 0 {
+			dates[*story.From] = true
+			*story.From = story.From.AddDate(0, 0, 1)
+		}
+	}
+
+	var data []time.Time
+	for date := range dates {
+		data = append(data, date)
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": data})
+}
+
+func GetMinAndMaxStoryDates(c echo.Context) error {
+	var token models.Token
+
+	err := db.Preload("SavedStories", func(tx *gorm.DB) *gorm.DB {
+		return tx.Select("`to`, `from`, `code`").Where("`to` > ?", time.Now())
+	}).First(&token, "jwt_token", utils.GetToken(c)).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
+	}
+
+	return c.JSON(http.StatusOK, token)
 }
