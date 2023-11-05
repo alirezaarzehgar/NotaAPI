@@ -2,7 +2,7 @@
 	"success": "Success",
 	"not_found": "Not found",
 	"token_not_found": "Your JWT token not found",
-	"user_conflict": "Someone registered with this email",
+	"user_conflict": "Someone registered with this email or business name",
 	"conflict": "Conflict",
 	"invalid_email":"Invalid email address",
 	"insecure_password":"Insecure password",

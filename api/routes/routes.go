@@ -35,6 +35,7 @@ func Init() *echo.Echo {
 	u.GET("/user/story/count", handlers.GetStoryCount)
 	u.GET("/user/profile", handlers.GetUserProfile)
 	u.PUT("/user/profile", handlers.EditUserProfile)
+	u.POST("/user/business-name-exists/:name", handlers.CheckBusinessNameExistance)
 	u.DELETE("/user/delete-account", handlers.UserDeleteAccount)
 
 	g.GET("/story/:code", handlers.GetStoryInfo)

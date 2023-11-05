@@ -163,3 +163,19 @@ func GetUserProfile(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, user)
 }
+
+func CheckBusinessNameExistance(c echo.Context) error {
+	var userCount int64
+
+	err := db.First(&models.User{}, "business_name", c.Param("name")).Count(&userCount).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": userCount >= 1,
+		"data":   []any{},
+	})
+}
