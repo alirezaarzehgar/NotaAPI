@@ -300,7 +300,8 @@ func ConvertStory(c echo.Context) error {
 func CheckStoryNameExistance(c echo.Context) error {
 	var storyCount int64
 
-	err := db.First(&models.Story{}, "name", c.Param("name")).Count(&storyCount).Error
+	err := db.Where(getJustAvailableStoryQuery(db, c)).
+		First(&models.Story{}, "name", c.Param("name")).Count(&storyCount).Error
 	if err == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	} else if err != nil {
