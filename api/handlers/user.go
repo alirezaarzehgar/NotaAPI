@@ -70,6 +70,7 @@ func GetStoryCount(c echo.Context) error {
 	var storyNormalCount, storyExploreCount int64
 
 	err := db.Model(&models.Story{}).
+		Where(getJustAvailableStoryQuery(db, c)).
 		Where(models.Story{UserID: utils.GetUserId(c), Type: models.STORY_TYPE_NORMAL}).
 		Count(&storyNormalCount).Error
 	if err != nil {
@@ -77,6 +78,7 @@ func GetStoryCount(c echo.Context) error {
 	}
 
 	err = db.Model(&models.Story{}).
+		Where(getJustAvailableStoryQuery(db, c)).
 		Where(models.Story{UserID: utils.GetUserId(c), Type: models.STORY_TYPE_EXPLORE}).
 		Count(&storyExploreCount).Error
 	if err != nil {
