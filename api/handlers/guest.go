@@ -130,8 +130,7 @@ func ListGuestStories(c echo.Context) error {
 	} else if err != nil {
 		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
 	}
-
-	return c.JSON(http.StatusOK, token.SavedStories)
+	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": token.SavedStories})
 }
 
 func GuestDeleteAccount(c echo.Context) error {
