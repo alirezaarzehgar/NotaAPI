@@ -151,3 +151,15 @@ func EditUserProfile(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": []any{}})
 }
+
+func GetUserProfile(c echo.Context) error {
+	var user models.User
+
+	err := db.Where(utils.GetUserId(c)).Omit("password").First(&user).Error
+	if err == gorm.ErrRecordNotFound {
+		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
+	} else if err != nil {
+		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
+	}
+	return c.JSON(http.StatusOK, user)
+}

@@ -33,6 +33,7 @@ func Init() *echo.Echo {
 
 	u := g.Group("", middlewares.UserOnly)
 	u.GET("/user/story/count", handlers.GetStoryCount)
+	u.GET("/user/profile", handlers.GetUserProfile)
 	u.PUT("/user/profile", handlers.EditUserProfile)
 	u.DELETE("/user/delete-account", handlers.UserDeleteAccount)
 

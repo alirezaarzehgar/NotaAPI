@@ -100,3 +100,7 @@ func GetUserId(c echo.Context) uint {
 	return uint(id)
 
 }
+
+func GetUnavailableStoriesFilter() {
+
+}
