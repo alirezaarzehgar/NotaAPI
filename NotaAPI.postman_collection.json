@@ -89,12 +89,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/user/count",
+							"raw": "{{url}}/user/story/count",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"user",
+								"story",
 								"count"
 							]
 						}
@@ -165,6 +166,34 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get user profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -206,7 +235,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJeXHVmZmZkXHVmZmZkXHVmZmZkYVx1ZmZmZFx1ZmZmZG9cdWZmZmRzIiwiZXhwIjoxNzAxMjAwNTAwfQ.9BAOO9tujJ39mSfsxj_Z43WNuLLuCi2MvGdOnhQKlEM",
+									"value": "{{guest_token}}",
 									"type": "string"
 								}
 							]
@@ -291,7 +320,7 @@
 							"variable": [
 								{
 									"key": "code",
-									"value": "a868a84c6b"
+									"value": "f54d9721af"
 								}
 							]
 						}
@@ -314,7 +343,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/guest/stories?start_date=2024-11-01&end_date=2024-11-29",
+							"raw": "{{url}}/guest/stories",
 							"host": [
 								"{{url}}"
 							],
@@ -325,11 +354,18 @@
 							"query": [
 								{
 									"key": "start_date",
-									"value": "2024-11-01"
+									"value": "2021-11-01",
+									"disabled": true
 								},
 								{
 									"key": "end_date",
-									"value": "2024-11-29"
+									"value": "2024-11-29",
+									"disabled": true
+								},
+								{
+									"key": "story_type",
+									"value": "explore",
+									"disabled": true
 								}
 							]
 						}
@@ -363,6 +399,63 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Available Story Dates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{guest_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/guest/available-story-dates",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"guest",
+								"available-story-dates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Count Stories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{guest_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/guest/story/count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"guest",
+								"story",
+								"count"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -384,6 +477,16 @@
 						},
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "asset",
+									"type": "file",
+									"src": "/home/ali/myface.jpg"
+								}
+							]
+						},
 						"url": {
 							"raw": "{{url}}/story/upload-asset",
 							"host": [
@@ -414,7 +517,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"type\": \"normal\",\n    \"name\": \"Test\",\n    \"from\": \"2026-11-19T19:45:38+03:30\",\n    \"to\": \"2026-11-29T19:45:38+03:30\",\n    \"final_image\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"background_url\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"main_background_url\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"cropped_background_url\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"background_color\": \"#213445\",\n    \"logo_url\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"logo_height\": 120,\n    \"logo_width\": 200,\n    \"logo_x_location\": 42,\n    \"logo_y_location\": 34,\n    \"attached_webpage\": \"http://www.google.com\",\n    \"attached_file_url\": \"d4735e3a265e16eee03f/fd4fe636fe+new.JPG\",\n    \"is_public\": true,\n    \"text\": \"hi hi\",\n    \"text_position\": \"2x5\",\n    \"text_size\": 123,\n    \"is_shared\": true\n}",
+							"raw": "{\n    \"type\": \"normal\",\n    \"name\": \"Test\",\n    \"from\": \"2026-11-19T19:45:38+03:30\",\n    \"to\": \"2026-11-29T19:45:38+03:30\",\n    \"final_image\": \"d4735e3a265e16eee03f/e2d0ea1e68+myface.jpg\",\n    \"background_url\": \"d4735e3a265e16eee03f/e2d0ea1e68+myface.jpg\",\n    \"main_background_url\": \"d4735e3a265e16eee03f/e2d0ea1e68+myface.jpg\",\n    \"cropped_background_url\": \"d4735e3a265e16eee03f/e2d0ea1e68+myface.jpg\",\n    \"background_color\": \"#213445\",\n    \"logo_url\": \"d4735e3a265e16eee03f/e2d0ea1e68+myface.jpg\",\n    \"logo_height\": 120,\n    \"logo_width\": 200,\n    \"logo_x_location\": 42,\n    \"logo_y_location\": 34,\n    \"attached_webpage\": \"http://www.google.com\",\n    \"attached_file_url\": \"d4735e3a265e16eee03f/e2d0ea1e68+myface.jpg\",\n    \"is_public\": true,\n    \"text\": \"hi hi\",\n    \"text_position\": \"2x5\",\n    \"text_size\": 123,\n    \"is_shared\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -540,7 +643,7 @@
 							"variable": [
 								{
 									"key": "code",
-									"value": "f9d089c99e"
+									"value": "dd7e8d1476"
 								}
 							]
 						}
@@ -550,6 +653,16 @@
 				{
 					"name": "Get stories",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -679,7 +792,7 @@
 							"variable": [
 								{
 									"key": "code",
-									"value": "224dee5bc0"
+									"value": "3505d21574"
 								}
 							]
 						}
@@ -693,6 +806,15 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxXHUwMDE2zJ5QXHVmZmZkXHVmZmZkYc22IiwiZXhwIjoxNzAxNzA5MjUyfQ.6AfvByjSjeVZwpw_32b-vG_AhpnF6LdWx1pWhXUDRDg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "{{url}}/token/check",
 					"host": [
@@ -730,15 +852,15 @@
 	"variable": [
 		{
 			"key": "url",
-			"value": "http://127.0.0.1:8000"
+			"value": "https://nota.mylifeuk.dev"
 		},
 		{
 			"key": "user_token",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtb2hhbW1hZEBnbWFpbC5jb20iLCJzdWIiOiJhbGlyZXphIiwiZXhwIjoxNzAxNjMzMjMwLCJqdGkiOiIyIn0.CgpdXZuT8_bCS5i_93BoeY-q0WwpEUpCGoF4wwt3roo"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtb2hhbW1hZEBnbWFpbC5jb20iLCJzdWIiOiJhbGlyZXphIiwiZXhwIjoxNzAxNzE0ODQ5LCJqdGkiOiIyIn0.O6lCuShDyDld4oY4sUj-WxpykkqWwTV93qdsYs9gxFc"
 		},
 		{
 			"key": "guest_token",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJcdTAwMDhcdWZmZmRCVlx1ZmZmZFYtXlx1MDAzZVx1ZmZmZCIsImV4cCI6MTcwMTYxOTQ0NH0.328J9n2VzjzPCRv6g8T3Sa826LXaNf9a5mOGa2AjXrU"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJcdTAwMThcdWZmZmQhXHVmZmZkXHVmZmZkXHVmZmZkXHVmZmZkeFZcdWZmZmQiLCJleHAiOjE3MDE3MTQ4NDl9.HeXJCjCoJUWAy5wjWmtBFULCLk8RTW5SR6_Q-PkOWmY"
 		}
 	]
 }
