@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -115,6 +116,10 @@ func ListGuestStories(c echo.Context) error {
 		conditions += " AND `to` >= ? AND `to` <= ?"
 		args = append(args, startDate, endDate)
 	}
+	if v, err := strconv.ParseBool(c.QueryParam("just_availables")); err == nil && v {
+		conditions += " AND `to` >= ?"
+		args = append(args, time.Now())
+	}
 
 	var token models.Token
 	args[0] = conditions
@@ -157,8 +162,17 @@ func GetGuestStoryCount(c echo.Context) error {
 	var storyNormalCount, storyExploreCount int
 	var t models.Token
 
+	conditions := "is_public = ? AND type = ?"
+	args := []any{"", true, models.STORY_TYPE_NORMAL}
+
+	if v, err := strconv.ParseBool(c.QueryParam("just_availables")); err == nil && v {
+		conditions += " AND `to` >= ?"
+		args = append(args, time.Now())
+	}
+
+	args[0] = conditions
 	err := db.Model(&models.Token{}).
-		Preload("SavedStories", "type = ?", models.STORY_TYPE_NORMAL).
+		Preload("SavedStories", args...).
 		First(&t, "jwt_token", utils.GetToken(c)).Error
 	if err == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
@@ -167,8 +181,9 @@ func GetGuestStoryCount(c echo.Context) error {
 	}
 	storyNormalCount = len(t.SavedStories)
 
+	args = []any{"", true, models.STORY_TYPE_EXPLORE}
 	err = db.Model(&models.Token{}).
-		Preload("SavedStories", "type = ?", models.STORY_TYPE_EXPLORE).
+		Preload("SavedStories", args...).
 		Select("id").
 		First(&t, "jwt_token", utils.GetToken(c)).Error
 	if err == gorm.ErrRecordNotFound {
