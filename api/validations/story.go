@@ -2,7 +2,6 @@ package validations
 
 import (
 	"net/url"
-	"time"
 
 	"github.com/Asrez/NotaAPI/models"
 )
@@ -13,9 +12,9 @@ func GetWrongStoryField(story models.Story) string {
 	}
 
 	if story.Type == models.STORY_TYPE_NORMAL {
-		if time.Until(*story.To) < 0 || story.To.Sub(*story.From) <= 0 {
-			return "to"
-		}
+		// if time.Until(*story.To) < 0 || story.To.Sub(*story.From) <= 0 {
+		// 	return "to"
+		// }
 		if _, err := url.ParseRequestURI(story.AttachedWebpage); story.AttachedWebpage != "" && err != nil {
 			return "attached_webpage"
 		}

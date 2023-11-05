@@ -178,7 +178,8 @@ func ListStories(c echo.Context) error {
 		defaultCond["is_public"] = v
 	}
 
-	r := db.Where(dateCond).Where(defaultCond).Find(&stories)
+	r := db.Where(utils.GetJustAvailableQuery(db, c)).
+		Where(dateCond).Where(defaultCond).Find(&stories)
 	if r.Error == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	}
@@ -194,28 +195,14 @@ func ListStories(c echo.Context) error {
 
 func GetStoryInfo(c echo.Context) error {
 	var story models.Story
-	isUser := false
-	userId := utils.GetUserId(c)
-	code := c.Param("code")
 
-	if userId > 0 {
-		isUser = true
-	}
-
-	r := db.Where(models.Story{Code: code}).
-		Or(map[string]any{"user_id": userId, "code": code}).First(&story)
+	r := db.Where(utils.GetJustAvailableQuery(db, c)).
+		Where(models.Story{Code: c.Param("code")}).First(&story)
 	if r.Error == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	}
 	if r.Error != nil {
 		return utils.ReturnAlert(c, http.StatusInternalServerError, "internal")
-	}
-
-	if isUser && story.UserID == userId {
-		return c.JSON(http.StatusOK, map[string]any{
-			"status": true,
-			"data":   map[string]any{"story": story},
-		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]any{"status": true, "data": story})

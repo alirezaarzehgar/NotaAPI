@@ -168,7 +168,7 @@ func GetUserProfile(c echo.Context) error {
 func CheckBusinessNameExistance(c echo.Context) error {
 	var userCount int64
 
-	err := db.First(&models.User{}, "business_name", c.Param("name")).Count(&userCount).Error
+	err := db.First(&models.User{}, "username", c.Param("name")).Count(&userCount).Error
 	if err == gorm.ErrRecordNotFound {
 		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
 	} else if err != nil {
