@@ -231,16 +231,16 @@ func ListStoryDates(c echo.Context) error {
 }
 
 func GetMinAndMaxStoryDates(c echo.Context) error {
-	var token models.Token
+	var min, max time.Time
 
-	err := db.Preload("SavedStories", func(tx *gorm.DB) *gorm.DB {
-		return tx.Select("`to`, `from`, `code`").Where("`to` > ?", time.Now())
-	}).First(&token, "jwt_token", utils.GetToken(c)).Error
-	if err == gorm.ErrRecordNotFound {
-		return utils.ReturnAlert(c, http.StatusNotFound, "not_found")
-	} else if err != nil {
-		return utils.ReturnAlert(c, http.StatusNotFound, "internal")
-	}
+	r, _ := db.Table("stories").
+		Select("MIN(stories.from), MAX(stories.to)").
+		Joins("INNER JOIN token_stories ON stories.code = token_stories.story_code").Rows()
+	r.Next()
+	r.Scan(&min, &max)
 
-	return c.JSON(http.StatusOK, token)
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": true,
+		"data":   map[string]any{"min": min, "max": max},
+	})
 }

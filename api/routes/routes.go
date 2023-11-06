@@ -56,6 +56,7 @@ func Init() *echo.Echo {
 	g.GET("/guest/stories", handlers.ListGuestStories)
 	g.GET("/guest/story/count", handlers.GetGuestStoryCount)
 	g.GET("/guest/available-story-dates", handlers.ListStoryDates)
+	g.GET("/guest/min-max-dates", handlers.GetMinAndMaxStoryDates)
 	g.DELETE("/guest/delete-account", handlers.GuestDeleteAccount)
 
 	return e
