@@ -28,8 +28,10 @@ func Init() *echo.Echo {
 	e.POST("/token/check", handlers.CheckToken)
 	e.POST("/guest/create-token", handlers.CreateGuestToken)
 
-	g := e.Group("", echojwt.WithConfig(echojwt.Config{SigningKey: config.JwtSecret()}), middlewares.CheckToken)
-	g.Static("/", config.Assets())
+	// TODO
+	// g := e.Group("", echojwt.WithConfig(echojwt.Config{SigningKey: config.JwtSecret()}), middlewares.CheckToken)
+	// g.Static("/", config.Assets())
+	e.Static("/assets/", config.Assets())
 
 	u := g.Group("", middlewares.UserOnly)
 	u.GET("/user/story/count", handlers.GetStoryCount)
