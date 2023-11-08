@@ -26,7 +26,7 @@ func ShowLogs(c echo.Context) error {
 
 func ShowCurrentLogs(c echo.Context) error {
 	url := fmt.Sprintf("/logs/%s.log", time.Now().Format("2006-01-02"))
-	return c.Redirect(http.StatusPermanentRedirect, url)
+	return c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
 func DefaultLogHandler(err error, c echo.Context) {
