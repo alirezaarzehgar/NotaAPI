@@ -10,6 +10,8 @@ import (
 	"github.com/Asrez/NotaAPI/config"
 )
 
+func todo(c echo.Context) error { return nil }
+
 func Init() *echo.Echo {
 	e := echo.New()
 	e.HTTPErrorHandler = handlers.DefaultLogHandler
